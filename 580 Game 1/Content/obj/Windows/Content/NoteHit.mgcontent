@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/nickg/source/repos/Intro-Screen-Project/580 Game 1/Content/NoteHit.png</SourceFile>
+  <SourceFile>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/NoteHit.png</SourceFile>
   <SourceTime>2022-02-01T10:26:26.4392642-06:00</SourceTime>
-  <DestFile>C:/Users/nickg/source/repos/Intro-Screen-Project/580 Game 1/Content/bin/Windows/Content/NoteHit.xnb</DestFile>
-  <DestTime>2022-02-01T10:27:36.2386421-06:00</DestTime>
+  <DestFile>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/bin/Windows/Content/NoteHit.xnb</DestFile>
+  <DestTime>2022-02-07T21:01:10.2206998-06:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54-05:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

@@ -7385,11 +7385,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\nickg\\source\\repos\\Intro-Screen-Project\\580 Game 1\\SwordsDance.csproj",
+      "projectUniqueName": "C:\\Users\\nickg\\source\\repos\\Swords-Dance\\580 Game 1\\SwordsDance.csproj",
       "projectName": "SwordsDance",
-      "projectPath": "C:\\Users\\nickg\\source\\repos\\Intro-Screen-Project\\580 Game 1\\SwordsDance.csproj",
+      "projectPath": "C:\\Users\\nickg\\source\\repos\\Swords-Dance\\580 Game 1\\SwordsDance.csproj",
       "packagesPath": "C:\\Users\\nickg\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\nickg\\source\\repos\\Intro-Screen-Project\\580 Game 1\\obj\\",
+      "outputPath": "C:\\Users\\nickg\\source\\repos\\Swords-Dance\\580 Game 1\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\nickg\\AppData\\Roaming\\NuGet\\NuGet.Config",

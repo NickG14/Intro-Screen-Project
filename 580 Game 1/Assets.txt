@@ -1,3 +1,5 @@
-Font Used: Arial 12 pt
+Font Used: Arial
 
-All textures made by me (swords, title, arrows, background, stars) using https://www.pixilart.com/
+All textures made by me (swords, title, background, stars, notes, buttons) using https://www.pixilart.com/
+
+Song: Any Other Way by Boom Kitty Feat. Ivy Marie (See LOOSELY_ENFORCED.txt)
