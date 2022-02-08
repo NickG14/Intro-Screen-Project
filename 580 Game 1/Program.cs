@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace _580_Game_1
+namespace SwordsDance
 {
     public static class Program
     {
         [STAThread]
         static void Main()
         {
-            using (var game = new TitleScreen())
+            using (var game = new MainWindow())
                 game.Run();
         }
     }

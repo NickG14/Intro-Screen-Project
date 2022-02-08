@@ -4,14 +4,28 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
+    <File>C:/Users/nickg/source/repos/Intro-Screen-Project/580 Game 1/Content/Any-Other-Way-Boom-Kitty.mp3</File>
     <File>C:/Users/nickg/source/repos/Intro-Screen-Project/580 Game 1/Content/Arial.spritefont</File>
     <File>C:/Users/nickg/source/repos/Intro-Screen-Project/580 Game 1/Content/Arrow.png</File>
+    <File>C:/Users/nickg/source/repos/Intro-Screen-Project/580 Game 1/Content/BigArial.spritefont</File>
     <File>C:/Users/nickg/source/repos/Intro-Screen-Project/580 Game 1/Content/CityBG.png</File>
+    <File>C:/Users/nickg/source/repos/Intro-Screen-Project/580 Game 1/Content/DarkScreen.png</File>
+    <File>C:/Users/nickg/source/repos/Intro-Screen-Project/580 Game 1/Content/FButton.png</File>
+    <File>C:/Users/nickg/source/repos/Intro-Screen-Project/580 Game 1/Content/GridLines.png</File>
+    <File>C:/Users/nickg/source/repos/Intro-Screen-Project/580 Game 1/Content/JButton.png</File>
+    <File>C:/Users/nickg/source/repos/Intro-Screen-Project/580 Game 1/Content/NoteHit.png</File>
     <File>C:/Users/nickg/source/repos/Intro-Screen-Project/580 Game 1/Content/Star.png</File>
     <File>C:/Users/nickg/source/repos/Intro-Screen-Project/580 Game 1/Content/SwordSheet.png</File>
     <File>C:/Users/nickg/source/repos/Intro-Screen-Project/580 Game 1/Content/Title.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

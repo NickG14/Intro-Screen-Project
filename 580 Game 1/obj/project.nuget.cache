@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "FK4CQSpD4nbf7YkylZG+T0UhwqU8sXb0MiJPvXd8Q35dVTblyOCnWyF4Olv1Ly+9KS2Gpk+hRVGVOFn4QbCzLg==",
+  "dgSpecHash": "qizB7iR2EzB2IHJpJhrzkqcFltXgM1fh4fAVyjmsDBq8iu+McxUlwL4vNKe7HZX1AbCXRslZ1ke28GRRIzS6Xg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\nickg\\source\\repos\\Intro-Screen-Project\\580 Game 1\\580 Game 1.csproj",
+  "projectFilePath": "C:\\Users\\nickg\\source\\repos\\Intro-Screen-Project\\580 Game 1\\SwordsDance.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\nickg\\.nuget\\packages\\libuv\\1.9.1\\libuv.1.9.1.nupkg.sha512",
     "C:\\Users\\nickg\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\1.1.0\\microsoft.codeanalysis.analyzers.1.1.0.nupkg.sha512",

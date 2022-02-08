@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 
-namespace _580_Game_1
+namespace SwordsDance
 {
     public enum Frame
     {
@@ -51,14 +51,14 @@ namespace _580_Game_1
             frameTimer += gameTime.ElapsedGameTime.TotalSeconds;
 
             //Update animation frame
-            if (frameTimer > 0.15)
+            if (frameTimer > 0.1)
             {
                 animationFrame++;
                 if (animationFrame > 3)
                 {
                     animationFrame = 0;
                 }
-                frameTimer -= 0.15;
+                frameTimer -= 0.1;
             }
             //Draw the sprite
             var source = new Rectangle(animationFrame * 100, 0, 100, 150);
