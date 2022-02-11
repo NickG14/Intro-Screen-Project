@@ -21,14 +21,15 @@ namespace SwordsDance
 
         private GraphicsDeviceManager _graphics;
 
+        //Spritebatches for different states of the game
         private SpriteBatch spriteBatch;
         private SpriteBatch introSpriteBatch;
         private SpriteBatch gameSpriteBatch;
         private SpriteBatch songOverSpriteBatch;
 
+        //Checks to see if keys are already down
         private bool fKeyDown = false;
         private bool jKeyDown = false;
-
         private bool escDown = false;
 
         //Intro textures
@@ -45,10 +46,11 @@ namespace SwordsDance
         private FButton fButton;
         private JButton jButton;
 
+        //The notes
         private NoteSprite note;
-
         private NoteSprite[] notes;
 
+        //Gridlines
         private Texture2D gridLines;
 
         //Used for scoring
@@ -64,7 +66,6 @@ namespace SwordsDance
 
         //Song syncing
         private Song anyOtherWay;
-
         private TimeSpan endSong = new TimeSpan(0, 2, 51);
 
         private const float bpm = 132.1f;
@@ -72,6 +73,7 @@ namespace SwordsDance
         private TimeSpan songTime;
         private TimeSpan nextNote = new TimeSpan(0,0,0,0);
 
+        //Different types of notes
         private TimeSpan quarterNote = new TimeSpan((long)(1 / (bpm / 60.0) * 10000000));
         private TimeSpan eighthNote = new TimeSpan((long)(1 / (bpm / 30.0) * 10000000));
         private TimeSpan sixteenthNote = new TimeSpan((long)(1 / (bpm / 15.0) * 10000000));
@@ -80,35 +82,22 @@ namespace SwordsDance
         private TimeSpan halfNote = new TimeSpan((long)(1 / (bpm / 120.0) * 10000000));
         private TimeSpan wholeNote = new TimeSpan((long)(1 / (bpm / 240.0) * 10000000));
         private TimeSpan quarterSix = new TimeSpan((long)(1 / (bpm / 75.0) * 10000000));
-        private TimeSpan eightBeats = new TimeSpan((long)(1 / (bpm / 480.0) * 10000000));
+        private TimeSpan eightAndAHalfBeats = new TimeSpan((long)(1 / (bpm / 510.0) * 10000000));
+        private TimeSpan fourAndAHalfBeats = new TimeSpan((long)(1 / (bpm / 270.0) * 10000000));
         private TimeSpan twoAndAHalf = new TimeSpan((long)(1 / (bpm / 150.0) * 10000000));
 
-        private TimeSpan lineUpBridge = new TimeSpan(0, 0, 1, 26, 456);
-        private TimeSpan lineUpDrop = new TimeSpan(0, 0, 0, 54, 600);
-        private TimeSpan lineUpBuildup = new TimeSpan(0, 0, 1, 41, 500);
-        private TimeSpan lineUpSecondDrop = new TimeSpan(0, 0, 1, 56, 520);
-
+        //End of song
         private TimeSpan endOfSong = new TimeSpan(0, 1, 0, 0);
         private float songLengthSeconds = 0f;
         private float songLengthMinutes = 0f;
 
+        //Note layouts
         private TimeSpan[] noteLayout;
-        private TimeSpan[] introNoteLayout;
-        private TimeSpan[] firstVerseLayout;
-        private TimeSpan[] firstDropLayout;
-        private TimeSpan[] secondVerseLayout;
-        private TimeSpan[] bridgeLayout;
-        private TimeSpan[] buildupLayout;
-        private TimeSpan[] secondDropLayout;
+        private TimeSpan[] allNoteLayout;
 
-
-        bool repeatDrop = false;
-
+        //Iterators for notes/sending notes
         int noteIterator = 0;
-
         int drawIterator = 0;
-
-        int section = 0;
 
         //SongOver Textures
         private Texture2D dark;
@@ -143,52 +132,87 @@ namespace SwordsDance
                                          new NoteSprite(), new NoteSprite(), new NoteSprite(), new NoteSprite(), new NoteSprite(),
                                          new NoteSprite(), new NoteSprite(), new NoteSprite(), new NoteSprite(), new NoteSprite()
                                         };
-
-            introNoteLayout = new TimeSpan[] { quarterNote, wholeNote, eighthNote, dottedQuarterNote, dottedQuarterNote, quarterNote, dottedQuarterNote, dottedQuarterNote, quarterNote, wholeNote, 
-                                          quarterNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote, quarterNote, eighthNote, quarterNote, quarterNote, 
+            //Complete note layout
+            allNoteLayout = new TimeSpan[] { 
+                                            //Intro
+                                          wholeNote, eighthNote, dottedQuarterNote, dottedQuarterNote, quarterNote, dottedQuarterNote, dottedQuarterNote, quarterNote, wholeNote, 
+                                          quarterNote, eighthNote, eighthNote, quarterNote, dottedQuarterNote, eighthNote, quarterNote, eighthNote, quarterNote, quarterNote, 
                                           quarterNote, quarterNote, quarterNote, quarterNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, sixteenthNote, 
-                                          threeSixteenthNote, eighthNote, quarterNote, quarterNote, quarterNote, quarterNote, threeSixteenthNote, quarterSix, threeSixteenthNote, quarterSix,
-                                          quarterNote, quarterNote, eighthNote, eighthNote, quarterNote, quarterNote, quarterNote, quarterNote, quarterNote };
-
-            firstVerseLayout = new TimeSpan[] { quarterNote, quarterNote, dottedQuarterNote, eighthNote, eighthNote, eighthNote, eighthNote, dottedQuarterNote, eighthNote, eighthNote, 
+                                          threeSixteenthNote, eighthNote, quarterNote, quarterNote, quarterNote, dottedQuarterNote, threeSixteenthNote, quarterSix, threeSixteenthNote, quarterSix,
+                                          quarterNote, quarterNote, eighthNote, eighthNote, quarterNote, quarterNote, quarterNote, quarterNote, quarterNote,
+                                            //first verse
+                                          quarterNote, quarterNote, halfNote, eighthNote, eighthNote, eighthNote, eighthNote, dottedQuarterNote, eighthNote, eighthNote, 
                                                 quarterNote, quarterNote, quarterNote, quarterNote, eighthNote, eighthNote, eighthNote, eighthNote, sixteenthNote, sixteenthNote, 
-                                                quarterNote, dottedQuarterNote, quarterNote, dottedQuarterNote, eighthNote, eighthNote, eighthNote, eighthNote,
+                                                quarterNote, halfNote, quarterNote, dottedQuarterNote, eighthNote, eighthNote, eighthNote, eighthNote,
                                                 dottedQuarterNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote, dottedQuarterNote, dottedQuarterNote, quarterNote, halfNote, 
                                                 quarterNote, quarterNote, quarterNote, quarterNote, quarterNote, eighthNote, eighthNote, quarterNote, eighthNote, 
                                                 eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote, eighthNote, eighthNote, 
-                                                eighthNote, eighthNote, dottedQuarterNote, quarterNote, quarterNote, quarterNote, quarterNote, quarterNote, eighthNote,
-                                                dottedQuarterNote, quarterNote, quarterNote, quarterNote, quarterNote, quarterNote, quarterNote, quarterNote, eighthNote, eighthNote, lineUpDrop };
-
-            firstDropLayout = new TimeSpan[] { quarterNote, eighthNote, eighthNote, quarterNote, quarterNote, sixteenthNote, threeSixteenthNote, quarterNote, sixteenthNote,
+                                                eighthNote, eighthNote, halfNote, quarterNote, quarterNote, quarterNote, quarterNote, quarterNote, eighthNote,
+                                                dottedQuarterNote, quarterNote, quarterNote, quarterNote, quarterNote, quarterNote, quarterNote, quarterNote, eighthNote, eighthNote, quarterNote,
+                                            //drop
+                                               dottedQuarterNote, eighthNote, eighthNote, quarterNote, quarterNote, sixteenthNote, threeSixteenthNote, quarterNote, sixteenthNote,
                                                threeSixteenthNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote,
-                                               eighthNote, eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, sixteenthNote, sixteenthNote };
+                                               eighthNote, eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, sixteenthNote, sixteenthNote,
 
-            secondVerseLayout = new TimeSpan[] { wholeNote, quarterNote, quarterNote, dottedQuarterNote, eighthNote, eighthNote, quarterNote, quarterNote, halfNote, eighthNote,
+                                           //Repeat drop
+                                               dottedQuarterNote, eighthNote, eighthNote, quarterNote, quarterNote, sixteenthNote, threeSixteenthNote, eighthNote, sixteenthNote, eighthNote, quarterNote,
+                                            eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote,
+                                               eighthNote, eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, sixteenthNote, sixteenthNote,
+                                           //Second Verse
+                                               fourAndAHalfBeats, quarterNote, quarterNote, dottedQuarterNote, eighthNote, eighthNote, quarterNote, quarterNote, halfNote, eighthNote,
                                                  quarterNote, dottedQuarterNote, eighthNote, dottedQuarterNote, eighthNote, eighthNote, eighthNote, sixteenthNote, sixteenthNote,
-                                                halfNote, quarterNote, dottedQuarterNote, eighthNote, eighthNote, quarterNote, quarterNote, quarterNote, eighthNote, lineUpBridge };
-
-            bridgeLayout = new TimeSpan[] { dottedQuarterNote, sixteenthNote, sixteenthNote, eighthNote, quarterNote, eighthNote, quarterNote, threeSixteenthNote, eighthNote, threeSixteenthNote, 
-                                            quarterNote, eighthNote, threeSixteenthNote, eighthNote, threeSixteenthNote, quarterNote, eighthNote, dottedQuarterNote, sixteenthNote, sixteenthNote, 
-                                            eighthNote, quarterNote, eighthNote, quarterNote, eighthNote, sixteenthNote, sixteenthNote, dottedQuarterNote, sixteenthNote, sixteenthNote, 
+                                                halfNote, quarterNote, dottedQuarterNote, eighthNote, eighthNote, quarterNote, quarterNote, quarterNote, eighthNote, eightAndAHalfBeats, 
+                                            //Bridge
+                                            dottedQuarterNote, sixteenthNote, sixteenthNote, eighthNote, quarterNote, eighthNote, quarterNote, threeSixteenthNote, eighthNote, threeSixteenthNote, 
+                                            dottedQuarterNote, eighthNote, threeSixteenthNote, eighthNote, threeSixteenthNote, quarterNote, eighthNote, dottedQuarterNote, sixteenthNote, sixteenthNote, 
+                                            eighthNote, quarterNote, eighthNote, quarterNote, eighthNote, sixteenthNote, sixteenthNote, halfNote, sixteenthNote, sixteenthNote, 
                                             threeSixteenthNote, eighthNote, threeSixteenthNote, dottedQuarterNote, sixteenthNote, sixteenthNote, dottedQuarterNote, sixteenthNote, sixteenthNote, threeSixteenthNote, 
-                                            eighthNote, threeSixteenthNote, lineUpBuildup };
+                                            eighthNote, threeSixteenthNote, wholeNote,
 
-            buildupLayout = new TimeSpan[] { eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, eighthNote,
+                                            //Buildup
+                                            quarterNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, eighthNote,
                                              eighthNote, sixteenthNote, threeSixteenthNote, quarterNote, eighthNote, threeSixteenthNote, eighthNote, sixteenthNote, threeSixteenthNote, quarterNote, eighthNote,
-                                             eighthNote, threeSixteenthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, eighthNote, eighthNote,
+                                             eighthNote, threeSixteenthNote, eighthNote, sixteenthNote, threeSixteenthNote, quarterNote, eighthNote, eighthNote,
                                              eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, eighthNote,
                                              eighthNote, sixteenthNote, threeSixteenthNote, quarterNote, eighthNote, threeSixteenthNote, eighthNote, sixteenthNote, threeSixteenthNote, quarterNote, eighthNote,
-                                             eighthNote, threeSixteenthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, eighthNote, lineUpSecondDrop };
+                                             eighthNote, threeSixteenthNote, eighthNote, sixteenthNote, threeSixteenthNote, 
 
-            secondDropLayout = new TimeSpan[] { quarterNote, quarterNote, quarterNote, quarterNote, sixteenthNote, eighthNote, quarterNote, sixteenthNote, eighthNote, eighthNote,
+                                             //Buildup Part 2
+                                             halfNote, quarterNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote, eighthNote, quarterNote, eighthNote, eighthNote,
                                                 sixteenthNote, threeSixteenthNote, eighthNote, eighthNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote, eighthNote,
                                                 eighthNote, eighthNote, sixteenthNote, eighthNote, eighthNote, sixteenthNote,
 
                                                 threeSixteenthNote, quarterNote, quarterNote, quarterNote, quarterNote, sixteenthNote, eighthNote, quarterNote, sixteenthNote, eighthNote, eighthNote,
                                                 sixteenthNote, threeSixteenthNote, eighthNote, eighthNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote, eighthNote,
-                                                eighthNote, eighthNote, sixteenthNote, eighthNote, eighthNote, sixteenthNote};
+                                                eighthNote, eighthNote, sixteenthNote, eighthNote, eighthNote, sixteenthNote,
 
-            noteLayout = introNoteLayout;
+                                                //Second Drop
+                                               halfNote, eighthNote, eighthNote, quarterNote, quarterNote, sixteenthNote, threeSixteenthNote, quarterNote, sixteenthNote,
+                                               threeSixteenthNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote,
+                                               eighthNote, eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, sixteenthNote, sixteenthNote,
+
+                                               dottedQuarterNote, eighthNote, eighthNote, quarterNote, quarterNote, sixteenthNote, threeSixteenthNote, eighthNote, sixteenthNote, eighthNote, quarterNote,
+                                               eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote,
+                                               eighthNote, eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, sixteenthNote, sixteenthNote, quarterNote,
+
+                                               dottedQuarterNote, eighthNote, eighthNote, quarterNote, sixteenthNote, threeSixteenthNote, quarterNote, sixteenthNote,
+                                               threeSixteenthNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote,
+                                               eighthNote, eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, sixteenthNote, sixteenthNote,
+
+
+                                                dottedQuarterNote, eighthNote, eighthNote, quarterNote, quarterNote, sixteenthNote, threeSixteenthNote, eighthNote, sixteenthNote, eighthNote, quarterNote,
+                                                eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote,
+                                               eighthNote, eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, sixteenthNote, sixteenthNote, endOfSong};
+
+            //Load notes into array as times in the song
+            noteLayout = new TimeSpan[allNoteLayout.Length + 1];
+            int i = 1;
+            noteLayout[0] = new TimeSpan(0, 0, 2);
+            foreach (TimeSpan t in allNoteLayout)
+            {
+                noteLayout[i] = noteLayout[i - 1].Add(t);
+                i++;
+            }
 
             
             base.Initialize();
@@ -196,19 +220,16 @@ namespace SwordsDance
 
         protected override void LoadContent()
         {
+            //Load Spritebatches
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
             introSpriteBatch = new SpriteBatch(GraphicsDevice);
-
             gameSpriteBatch = new SpriteBatch(GraphicsDevice);
-
             songOverSpriteBatch = new SpriteBatch(GraphicsDevice);
 
             //Load Intro Textures
             arial = Content.Load<SpriteFont>("Arial");
             title = Content.Load<Texture2D>("Title");
             foreach (var sword in swords) sword.LoadContent(Content);
-            //arrow = Content.Load<Texture2D>("Arrow");
 
             //Load Constant Textures
             bg = Content.Load<Texture2D>("CityBG");
@@ -226,6 +247,7 @@ namespace SwordsDance
 
             //Load Songs
             anyOtherWay = Content.Load<Song>("Any-Other-Way-Boom-Kitty");
+            MediaPlayer.Volume = .1f;
             nextNote = new TimeSpan(0, 0, 0, 2);
             songLengthSeconds = anyOtherWay.Duration.Seconds;
             songLengthMinutes = anyOtherWay.Duration.Minutes;
@@ -235,11 +257,15 @@ namespace SwordsDance
             bigArial = Content.Load <SpriteFont>("BigArial");
         }
 
+        /// <summary>
+        /// The base update function that is called every frame
+        /// </summary>
+        /// <param name="gameTime">The Game Time</param>
         protected override void Update(GameTime gameTime)
         {
-            // TODO: Add your update logic here
             base.Update(gameTime);
 
+            //Check game state
             switch (_gamestate)
             {
                 case GameState.IntroScreen:
@@ -260,34 +286,38 @@ namespace SwordsDance
             }
         }
 
+        /// <summary>
+        /// Reloads the level
+        /// </summary>
         private void Reload()
         {
-            section = 0;
             score = 0;
             streak = 0;
             multiplier = 1;
             noteIterator = 0;
             alreadyHit = false;
-            repeatDrop = false;
-            
         }
 
+        /// <summary>
+        /// Update function for the intro screen
+        /// </summary>
+        /// <param name="gameTime">the Game Time</param>
         private void UpdateIntroScreen(GameTime gameTime)
         {
+            //Exit game
             if ((GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) && !escDown)
                 Exit();
-
+            //Prevent holding escape
             if ((GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Released && Keyboard.GetState().IsKeyUp(Keys.Escape)))
                 escDown = false;
                 
-
+            //Enter pressed
             if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
                 _gamestate = GameState.Gameplay;
 
                 if(_gamestate == GameState.Gameplay)
                 {
-                    //TimeSpan startSong = new TimeSpan(0, 0, 2, 47, 600);
                     TimeSpan startSong = new TimeSpan(0, 0, 0, 0, 0);
                     MediaPlayer.Play(anyOtherWay, startSong);
                 }
@@ -295,23 +325,29 @@ namespace SwordsDance
             }
         }
 
+        /// <summary>
+        /// Update function for the gameplay loop
+        /// </summary>
+        /// <param name="gameTime">The Game Time</param>
         private void UpdateGameplay(GameTime gameTime)
         {
             alreadyHit = false;
             note.Update(gameTime);
 
+            //Make sure MediaPlayer is playing
             if(MediaPlayer.State == MediaState.Stopped) MediaPlayer.Play(anyOtherWay, songTime);
-
             else if (MediaPlayer.State == MediaState.Paused) MediaPlayer.Resume();
 
+            //Get song position and check for end of song
             songTime = MediaPlayer.PlayPosition;
-
             if(songTime.Duration().CompareTo(endSong) > 0)
             {
                 _gamestate = GameState.SongOver;
                 MediaPlayer.Stop();
                 songTime = new TimeSpan(0, 0, 0);
             }
+
+            //Change multiplier based on how many notes have been hit in a row
             if(streak >= 20)
             {
                 multiplier = 5;
@@ -333,94 +369,23 @@ namespace SwordsDance
                 multiplier = 1;
             }
             
-            
-            //Hard Code some notes in to hopefully prevent desyncing
-            if (noteLayout[noteIterator] == lineUpBridge)
-            {
-                nextNote = lineUpBridge;
-            }
-            if (noteLayout[noteIterator] == lineUpDrop)
-            {
-                nextNote = lineUpDrop;
-            }
-            if (noteLayout[noteIterator] == lineUpBuildup)
-            {
-                nextNote = lineUpBuildup;
-            }
-            if (noteLayout[noteIterator] == lineUpSecondDrop)
-            {
-                nextNote = lineUpSecondDrop;
-            }
-
-            //Send notes out
+            //Send notes out at correct times
             if (songTime.Duration().CompareTo(nextNote.Duration()) > 0)
             {
                 notes[drawIterator].stopped = false;
                 noteIterator++;
+               
                 if (noteIterator == noteLayout.Length)
                 {
                     noteIterator = 0;
-                    
-                    if (section == 0)
-                    {  
-                        noteLayout = firstVerseLayout;
-                    }
-                    if (section == 1)
-                    {
-                        noteLayout = firstDropLayout;
-                    }
-                    
-                    section++;
-
-                    //Plays the drop twice (its the same notes)
-                    if (section == 3)
-                    {
-                        if (!repeatDrop)
-                        {
-                            repeatDrop = true;
-                            section = 2;
-                        }
-                        else
-                        {
-                            noteLayout = secondVerseLayout;
-                        }
-
-                    }
-
-                    if (section == 4)
-                    {
-                        noteLayout = bridgeLayout;
-                    }
-
-                    if (section == 5)
-                    {
-                        noteLayout = buildupLayout;
-                    }
-
-                    if (section == 6)
-                    {
-                        noteLayout = secondDropLayout;
-                        repeatDrop = false;
-                    }
-                    if (section >= 7)
-                    {
-                        noteLayout = firstDropLayout;
-                    }
-                    if (section >= 11)
-                    {
-                        repeatDrop = true;
-                        noteLayout[0] = endOfSong;
-                    }
-
-
                 }
-
-                drawIterator++;
+               
+                    drawIterator++;
                 if(drawIterator == notes.Length)
                 {
                     drawIterator = 0;
                 }
-                nextNote = songTime.Duration().Add(noteLayout[noteIterator].Duration());
+                nextNote = noteLayout[noteIterator];
             }
 
             if (songTime.Duration().Seconds >= songLengthSeconds && songTime.Duration().Minutes >= songLengthMinutes )
@@ -506,7 +471,7 @@ namespace SwordsDance
             }
 
 
-
+            //Reset note if it goes off screen
             foreach (NoteSprite n in notes)
             {
                 if (n.Bounds.CollidesWith(reset.Bounds))
@@ -537,18 +502,22 @@ namespace SwordsDance
 
         }
 
+        /// <summary>
+        /// Update function for the Paused state
+        /// </summary>
+        /// <param name="gameTime">The Game Time</param>
         private void UpdatePaused(GameTime gameTime)
         {
+            //Prevent holding escape
             if ((GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Released && Keyboard.GetState().IsKeyUp(Keys.Escape)))
                 escDown = false;
-
+            //Resume gameplay
             if ((GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) && !escDown)
             {
                 escDown = true;
                 _gamestate = GameState.Gameplay;
             }
-
-
+            //Reset level
             if ((GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.R)))
             {
                 _gamestate = GameState.Gameplay;
@@ -559,6 +528,7 @@ namespace SwordsDance
                 MediaPlayer.Play(anyOtherWay, startSong);
             }
 
+            //Exit to Title Screen
             if ((GamePad.GetState(PlayerIndex.One).Buttons.LeftShoulder == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.E)))
             {
                 _gamestate = GameState.IntroScreen;
@@ -569,11 +539,17 @@ namespace SwordsDance
                 
         }
 
+        /// <summary>
+        /// Update function for when song ends
+        /// </summary>
+        /// <param name="gameTime">The Game Time</param>
         private void UpdateEndScreen(GameTime gameTime)
         {
+            //Set new highscore if applicable
             if (score > highscore)
                 highscore = score;
 
+            //Exit to Title Screen
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 escDown = true;
@@ -583,7 +559,7 @@ namespace SwordsDance
                 Reload();
             }
                
-
+            //Reset level
             if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.R))
             {
                 _gamestate = GameState.Gameplay;
@@ -597,14 +573,18 @@ namespace SwordsDance
                 
         }
 
+        /// <summary>
+        /// The base draw function that is called every frame
+        /// </summary>
+        /// <param name="gameTime">The Game Time</param>
         protected override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
 
+            //Set color of background
             GraphicsDevice.Clear(Color.DarkMagenta);
 
-            
-
+            //Draw textures that will always be on screen
             spriteBatch.Begin();
 
             //Draw Stars
@@ -620,6 +600,7 @@ namespace SwordsDance
 
             spriteBatch.End();
 
+            //Draw different things based on game state
             switch (_gamestate)
             {
                 case GameState.IntroScreen:
@@ -641,10 +622,13 @@ namespace SwordsDance
             }
         }
 
+        /// <summary>
+        /// The draw function for the Title Screen
+        /// </summary>
+        /// <param name="gameTime">The Game Time</param>
         private void DrawIntro(GameTime gameTime)
         {
             introSpriteBatch.Begin();
-            // TODO: Add your drawing code here
 
             //Draw text
             introSpriteBatch.DrawString(arial, "Press Start/Enter to start the game", new Vector2(290, 400), Color.White);
@@ -653,15 +637,6 @@ namespace SwordsDance
             //Draw title
             introSpriteBatch.Draw(title, new Vector2(110, 30), new Rectangle(0, 0, 300, 100), Color.LightBlue, 0, new Vector2(0, 0), (float)2.0, SpriteEffects.None, 0);
 
-            //Draw arrows
-
-            /*
-            for (int i = 1; i < 5; i++)
-            {
-                introSpriteBatch.Draw(arrow, new Vector2(50, (i - 1) * 100 + 50), new Rectangle(0, 0, 100, 100), Color.White, 0, new Vector2(0, 0), (float)0.25, SpriteEffects.None, 0);
-                introSpriteBatch.Draw(arrow, new Vector2(725, i * 100 - 50), new Rectangle(0, 0, 100, 100), Color.White, 0, new Vector2(0, 0), (float)0.25, SpriteEffects.FlipVertically, 0);
-            }
-            */
             //Draw Swords
             foreach (var sword in swords)
             {
@@ -672,6 +647,10 @@ namespace SwordsDance
             introSpriteBatch.End();
         }
 
+        /// <summary>
+        /// The draw function for the gameplay loop
+        /// </summary>
+        /// <param name="gameTime">The Game Time</param>
         private void DrawGameplay(GameTime gameTime)
         {
             gameSpriteBatch.Begin();
@@ -685,7 +664,6 @@ namespace SwordsDance
 
 
             //testing values
-
             /*
             gameSpriteBatch.DrawString(arial, songTime.Duration().Seconds.ToString(), new Vector2(295, 450), Color.White);
             gameSpriteBatch.DrawString(arial, songLengthSeconds.ToString(), new Vector2(295, 400), Color.White);
@@ -702,6 +680,7 @@ namespace SwordsDance
             gameSpriteBatch.DrawString(arial, fButton.Bounds.X.ToString(), new Vector2(100, 350), Color.White);
             gameSpriteBatch.DrawString(arial, fButton.Bounds.Y.ToString(), new Vector2(150, 350), Color.White);
             */
+
             //Draw notes
             foreach (NoteSprite n in notes)
             {
@@ -718,6 +697,10 @@ namespace SwordsDance
             gameSpriteBatch.End();
         }
 
+        /// <summary>
+        /// The draw function for the paused state
+        /// </summary>
+        /// <param name="gameTime">The Game Time</param>
         private void DrawPaused(GameTime gameTime)
         {
             songOverSpriteBatch.Begin();
@@ -729,15 +712,20 @@ namespace SwordsDance
             //Display Score
             songOverSpriteBatch.DrawString(bigArial, "Score:", new Vector2(300, 100), Color.White);
             songOverSpriteBatch.DrawString(bigArial, score.ToString(), new Vector2(300, 170), Color.White);
+            songOverSpriteBatch.DrawString(arial, "High Score: " + highscore.ToString(), new Vector2(300, 40), Color.White);
+
+            //Display options
             songOverSpriteBatch.DrawString(arial, "Press E/Left Trigger to exit to menu", new Vector2(300, 250), Color.White);
             songOverSpriteBatch.DrawString(arial, "Press Start/R to retry", new Vector2(300, 300), Color.White);
             songOverSpriteBatch.DrawString(arial, "Press Escape/B to resume", new Vector2(300, 350), Color.White);
 
-            songOverSpriteBatch.DrawString(arial, "High Score: " + highscore.ToString(), new Vector2(300, 40), Color.White);
-
             songOverSpriteBatch.End();
         }
 
+        /// <summary>
+        /// The draw function for when a song ends
+        /// </summary>
+        /// <param name="gameTime">The Game Time</param>
         private void DrawEndScreen(GameTime gameTime)
         {
             songOverSpriteBatch.Begin();
