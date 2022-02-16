@@ -247,7 +247,7 @@ namespace SwordsDance
 
             //Load Songs
             anyOtherWay = Content.Load<Song>("Any-Other-Way-Boom-Kitty");
-            MediaPlayer.Volume = .1f;
+            MediaPlayer.Volume = .3f;
             nextNote = new TimeSpan(0, 0, 0, 2);
             songLengthSeconds = anyOtherWay.Duration.Seconds;
             songLengthMinutes = anyOtherWay.Duration.Minutes;
@@ -737,9 +737,12 @@ namespace SwordsDance
             //Display Score
             songOverSpriteBatch.DrawString(bigArial, "Score:", new Vector2(300, 100), Color.White);
             songOverSpriteBatch.DrawString(bigArial, score.ToString(), new Vector2(300, 170), Color.White);
+            songOverSpriteBatch.DrawString(arial, "High Score: " + highscore.ToString(), new Vector2(300, 40), Color.White);
+
+            //Display Options
             songOverSpriteBatch.DrawString(arial, "Press Start/R to retry", new Vector2(300, 250), Color.White);
             songOverSpriteBatch.DrawString(arial, "Press Escape/B to exit song", new Vector2(300, 300), Color.White);
-            songOverSpriteBatch.DrawString(arial, "High Score: " + highscore.ToString(), new Vector2(300, 40), Color.White);
+
 
             songOverSpriteBatch.End();
         }
