@@ -99,3 +99,4 @@ C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\obj\Release\netcoreapp3.1\Sw
 C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\obj\Release\netcoreapp3.1\SwordsDance.pdb
 C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\obj\Release\netcoreapp3.1\SwordsDance.genruntimeconfig.cache
 C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\StartSound.xnb
+C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\NoteHitSound.xnb

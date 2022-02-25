@@ -2,4 +2,6 @@ Font Used: Arial
 
 All textures made by me (swords, title, background, stars, notes, buttons) using https://www.pixilart.com/
 
+All sound effects made by me(start game sound, note hit sound) using bfxr
+
 Song: Any Other Way by Boom Kitty Feat. Ivy Marie (See LOOSELY_ENFORCED.txt)

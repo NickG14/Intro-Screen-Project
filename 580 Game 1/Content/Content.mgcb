@@ -117,6 +117,12 @@
 /processorParam:TextureFormat=Color
 /build:NoteHit.png
 
+#begin NoteHitSound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:NoteHitSound.wav
+
 #begin Star.png
 /importer:TextureImporter
 /processor:TextureProcessor

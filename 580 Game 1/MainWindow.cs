@@ -67,6 +67,7 @@ namespace SwordsDance
 
         //Sound Effects
         private SoundEffect startSound;
+        private SoundEffect noteHit;
 
         //Song syncing
         private Song anyOtherWay;
@@ -251,6 +252,7 @@ namespace SwordsDance
 
             //Load Sound Effects
             startSound = Content.Load<SoundEffect>("StartSound");
+            noteHit = Content.Load<SoundEffect>("NoteHitSound");
 
             //Load Songs
             anyOtherWay = Content.Load<Song>("Any-Other-Way-Boom-Kitty");
@@ -410,6 +412,7 @@ namespace SwordsDance
                     {
                         if (n.Bounds.CollidesWith(fButton.Bounds))
                         {
+                            noteHit.Play();
                             score = score + (multiplier * 250);
                             streak++;
                             alreadyHit = true;
@@ -449,6 +452,7 @@ namespace SwordsDance
                     {
                         if (n.Bounds.CollidesWith(jButton.Bounds))
                         {
+                            noteHit.Play();
                             score = score + (multiplier * 250);
                             streak++;
                             alreadyHit = true;
