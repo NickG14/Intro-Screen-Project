@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 using System;
 
 namespace SwordsDance
@@ -63,6 +64,9 @@ namespace SwordsDance
 
         //Triggers
         private ResetBarrier reset = new ResetBarrier();
+
+        //Sound Effects
+        private SoundEffect startSound;
 
         //Song syncing
         private Song anyOtherWay;
@@ -245,9 +249,12 @@ namespace SwordsDance
             }
             gridLines = Content.Load<Texture2D>("GridLines");
 
+            //Load Sound Effects
+            startSound = Content.Load<SoundEffect>("StartSound");
+
             //Load Songs
             anyOtherWay = Content.Load<Song>("Any-Other-Way-Boom-Kitty");
-            MediaPlayer.Volume = .3f;
+            MediaPlayer.Volume = .5f;
             nextNote = new TimeSpan(0, 0, 0, 2);
             songLengthSeconds = anyOtherWay.Duration.Seconds;
             songLengthMinutes = anyOtherWay.Duration.Minutes;
@@ -296,6 +303,7 @@ namespace SwordsDance
             multiplier = 1;
             noteIterator = 0;
             alreadyHit = false;
+            startSound.Play();
         }
 
         /// <summary>
@@ -315,6 +323,7 @@ namespace SwordsDance
             if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
                 _gamestate = GameState.Gameplay;
+                startSound.Play();
 
                 if(_gamestate == GameState.Gameplay)
                 {
@@ -496,6 +505,7 @@ namespace SwordsDance
             {
                 escDown = true;
                 _gamestate = GameState.Paused;
+                startSound.Play();
                 MediaPlayer.Pause();
             }
 

@@ -129,6 +129,12 @@
 /processorParam:TextureFormat=Color
 /build:Star.png
 
+#begin StartSound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:StartSound.wav
+
 #begin SwordSheet.png
 /importer:TextureImporter
 /processor:TextureProcessor

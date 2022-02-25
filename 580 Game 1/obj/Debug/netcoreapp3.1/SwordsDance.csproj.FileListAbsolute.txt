@@ -48,3 +48,4 @@ C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\obj\Debug\netcoreapp3.1\Swor
 C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\obj\Debug\netcoreapp3.1\SwordsDance.pdb
 C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\obj\Debug\netcoreapp3.1\SwordsDance.genruntimeconfig.cache
 C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\obj\Debug\netcoreapp3.1\SwordsDance.csprojAssemblyReference.cache
+C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Debug\netcoreapp3.1\Content\StartSound.xnb
