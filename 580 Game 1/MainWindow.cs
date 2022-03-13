@@ -159,7 +159,7 @@ namespace SwordsDance
             jButton = new JButton();
 
             //Initialize Colors
-            red = 150;
+            red = 110;
             green = 19;
             blue = 19;
             rainbow = new Color(red, green, blue);
@@ -713,8 +713,8 @@ namespace SwordsDance
 
             //Draw Stars
             spriteBatch.Draw(star, new Vector2(500, 20), new Rectangle(0, 0, 64, 64), Color.White);
-            spriteBatch.Draw(star, new Vector2(50, 170), new Rectangle(0, 0, 64, 64), Color.White);
-            spriteBatch.Draw(star, new Vector2(350, 250), new Rectangle(0, 0, 64, 64), Color.White);
+            spriteBatch.Draw(star, new Vector2(50, 110), new Rectangle(0, 0, 64, 64), Color.White);
+            spriteBatch.Draw(star, new Vector2(300, 250), new Rectangle(0, 0, 64, 64), Color.White);
             spriteBatch.Draw(star, new Vector2(780, 100), new Rectangle(0, 0, 64, 64), Color.White);
             spriteBatch.End();
 
@@ -751,7 +751,7 @@ namespace SwordsDance
         /// <param name="gameTime">The Game Time</param>
         private void DrawIntro(GameTime gameTime)
         {
-            spriteBatch.Begin(blendState: BlendState.AlphaBlend);
+            spriteBatch.Begin(blendState: BlendState.Additive);
             //Draw Background
             spriteBatch.Draw(bg, new Vector2(-50, 100), new Rectangle(0, 0, 700, 500), rainbow);
             spriteBatch.Draw(bg, new Vector2(650, 100), new Rectangle(0, 0, 700, 500), rainbow);
@@ -837,7 +837,7 @@ namespace SwordsDance
         /// <param name="gameTime">The Game Time</param>
         private void DrawGameplay(GameTime gameTime, bool paused)
         {
-            spriteBatch.Begin(blendState: BlendState.AlphaBlend);
+            spriteBatch.Begin(blendState: BlendState.Additive);
             //Draw Background
             spriteBatch.Draw(bg, new Vector2(-50, 100), new Rectangle(0, 0, 700, 500), rainbow);
             spriteBatch.Draw(bg, new Vector2(650, 100), new Rectangle(0, 0, 700, 500), rainbow);
