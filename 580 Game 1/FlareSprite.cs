@@ -7,17 +7,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace SwordsDance
 {
-    public enum Frame
-    {
-        Left,
-        SpinLeft,
-        Right,
-        SpinRight
-    }
-    /// <summary>
-    /// A class representing a sword sprite
-    /// </summary>
-    public class SwordSprite
+    class FlareSprite
     {
         private Texture2D texture;
         private double frameTimer;
@@ -30,7 +20,7 @@ namespace SwordsDance
         /// </summary>
         public Frame Frame;
 
-        public Rectangle Position { get; set; }
+        public Vector2 Position;
 
         /// <summary>
         /// Loads the sword sprite texture
@@ -38,7 +28,8 @@ namespace SwordsDance
         /// <param name="content">The ContentManager to load with</param>
         public void LoadContent(ContentManager content)
         {
-            texture = content.Load<Texture2D>("SwordSheet");
+            texture = content.Load<Texture2D>("flare");
+           
         }
 
         /// <summary>
@@ -46,25 +37,19 @@ namespace SwordsDance
         /// </summary>
         /// <param name="gameTime">The game time</param>
         /// <param name="spriteBatch">The spritebatch to draw with</param>
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, bool paused)
         {
+            if(!paused)
             //Update animation timer
-            frameTimer += gameTime.ElapsedGameTime.TotalSeconds;
-            angle += 0.02f;
+            Position.X -= (float)gameTime.ElapsedGameTime.TotalSeconds * 100;
+  
             //Update animation frame
-            if (frameTimer > 0.1)
+            if (Position.X < -800)
             {
-                animationFrame++;
-                if (animationFrame > 3)
-                {
-                    animationFrame = 0;
-                }
-                frameTimer -= 0.1;
+                Position.X += 2100;
             }
-            //Draw the sprite
-            var source = new Rectangle(animationFrame * 100, 0, 100, 150);
-            spriteBatch.Draw(texture, Position, source, Color.White, angle, new Vector2(50, 75), SpriteEffects.None, 0);
-            
+            spriteBatch.Draw(texture, Position, null, Color.White);
+
         }
     }
 }

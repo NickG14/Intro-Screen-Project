@@ -100,3 +100,7 @@ C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\obj\Release\netcoreapp3.1\Sw
 C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\obj\Release\netcoreapp3.1\SwordsDance.genruntimeconfig.cache
 C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\StartSound.xnb
 C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\NoteHitSound.xnb
+C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\CityBGWhite.xnb
+C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\flare.xnb
+C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\SelectBar.xnb
+C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\Test.xnb

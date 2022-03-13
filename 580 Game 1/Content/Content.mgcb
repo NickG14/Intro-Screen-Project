@@ -45,7 +45,7 @@
 /processorParam:TextureFormat=Compressed
 /build:BigArial.spritefont
 
-#begin CityBG.png
+#begin CityBGWhite.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -55,7 +55,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:CityBG.png
+/build:CityBGWhite.png
 
 #begin DarkScreen.png
 /importer:TextureImporter
@@ -80,6 +80,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:FButton.png
+
+#begin flare.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:flare.png
 
 #begin GridLines.png
 /importer:TextureImporter
@@ -123,6 +135,18 @@
 /processorParam:Quality=Best
 /build:NoteHitSound.wav
 
+#begin SelectBar.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SelectBar.png
+
 #begin Star.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -152,6 +176,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:SwordSheet.png
+
+#begin Test.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Test.png
 
 #begin Title.png
 /importer:TextureImporter

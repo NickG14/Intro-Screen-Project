@@ -8,19 +8,25 @@
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/Arial.spritefont</File>
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/Arrow.png</File>
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/BigArial.spritefont</File>
-    <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/CityBG.png</File>
+    <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/CityBGWhite.png</File>
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/DarkScreen.png</File>
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/FButton.png</File>
+    <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/flare.png</File>
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/GridLines.png</File>
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/JButton.png</File>
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/NoteHit.png</File>
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/NoteHitSound.wav</File>
+    <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/SelectBar.png</File>
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/Star.png</File>
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/StartSound.wav</File>
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/SwordSheet.png</File>
+    <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/Test.png</File>
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/Title.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

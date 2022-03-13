@@ -11,6 +11,7 @@ namespace SwordsDance
     public enum GameState
     {
         IntroScreen,
+        LevelSelect,
         Gameplay,
         Paused,
         SongOver
@@ -26,26 +27,45 @@ namespace SwordsDance
         private SpriteBatch spriteBatch;
         private SpriteBatch introSpriteBatch;
         private SpriteBatch gameSpriteBatch;
+        private SpriteBatch alphaSpriteBatch;
         private SpriteBatch songOverSpriteBatch;
 
         //Checks to see if keys are already down
         private bool fKeyDown = false;
         private bool jKeyDown = false;
         private bool escDown = false;
+        private bool enterDown = false;
+        private bool downDown = false;
+        private bool upDown = false;
 
+      
         //Intro textures
         private SpriteFont arial;
         private Texture2D title;
         private SwordSprite[] swords;
+        private FlareSprite[] flares;
         //private Texture2D arrow;
 
         //Constant textures
         private Texture2D bg;
         private Texture2D star;
 
+        //Level Select textures
+        private Texture2D selectBar;
+        private Vector2 barPosition = new Vector2(110, 90);
+
         //Game textures
         private FButton fButton;
         private JButton jButton;
+        private Texture2D flare;
+
+        //Dynamic Colors
+        private int red;
+        private int green;
+        private int blue;
+        private int maxIntensity;
+        private int minIntensity;
+        private Color rainbow;
 
         //The notes
         private NoteSprite note;
@@ -70,7 +90,9 @@ namespace SwordsDance
         private SoundEffect noteHit;
 
         //Song syncing
+        int songID = 0;
         private Song anyOtherWay;
+        private Song[] allSongs = new Song[10];
         private TimeSpan endSong = new TimeSpan(0, 2, 51);
 
         private const float bpm = 132.1f;
@@ -121,13 +143,29 @@ namespace SwordsDance
 
             //Initialize intro sprites
             swords = new SwordSprite[]{
-            new SwordSprite() { Position = new Vector2(200,200), animationFrame = 0},
-            new SwordSprite() {Position = new Vector2(500,200), animationFrame = 2}
+            new SwordSprite() { Position = new Rectangle(200, 250, 100, 150), animationFrame = 0},
+            new SwordSprite() {Position = new Rectangle(550, 250, 100, 150), animationFrame = 0}
+            };
+
+            flares = new FlareSprite[]
+            {
+            new FlareSprite() { Position = new Vector2(0,0)},
+            new FlareSprite() { Position = new Vector2(700,0)},
+            new FlareSprite() { Position = new Vector2(1400,0)}
             };
 
             //Initialize game sprites
             fButton = new FButton();
             jButton = new JButton();
+
+            //Initialize Colors
+            red = 150;
+            green = 19;
+            blue = 19;
+            rainbow = new Color(red, green, blue);
+            maxIntensity = red;
+            minIntensity = blue;
+
 
 
             //Make the song
@@ -212,7 +250,7 @@ namespace SwordsDance
             //Load notes into array as times in the song
             noteLayout = new TimeSpan[allNoteLayout.Length + 1];
             int i = 1;
-            noteLayout[0] = new TimeSpan(0, 0, 2);
+            noteLayout[0] = new TimeSpan(0, 0, 0, 1, 900);
             foreach (TimeSpan t in allNoteLayout)
             {
                 noteLayout[i] = noteLayout[i - 1].Add(t);
@@ -229,16 +267,21 @@ namespace SwordsDance
             spriteBatch = new SpriteBatch(GraphicsDevice);
             introSpriteBatch = new SpriteBatch(GraphicsDevice);
             gameSpriteBatch = new SpriteBatch(GraphicsDevice);
+            alphaSpriteBatch = new SpriteBatch(GraphicsDevice);
             songOverSpriteBatch = new SpriteBatch(GraphicsDevice);
 
             //Load Intro Textures
             arial = Content.Load<SpriteFont>("Arial");
             title = Content.Load<Texture2D>("Title");
             foreach (var sword in swords) sword.LoadContent(Content);
+            foreach (var flare in flares) flare.LoadContent(Content);
 
             //Load Constant Textures
-            bg = Content.Load<Texture2D>("CityBG");
+            bg = Content.Load<Texture2D>("CityBGWhite");
             star = Content.Load<Texture2D>("Star");
+
+            //Load Level Select Textures
+            selectBar = Content.Load<Texture2D>("SelectBar");
 
             //Load Game Textures
             fButton.LoadContent(Content);
@@ -249,6 +292,7 @@ namespace SwordsDance
                 n.LoadContent(Content);
             }
             gridLines = Content.Load<Texture2D>("GridLines");
+            flare = Content.Load<Texture2D>("flare");
 
             //Load Sound Effects
             startSound = Content.Load<SoundEffect>("StartSound");
@@ -261,9 +305,12 @@ namespace SwordsDance
             songLengthSeconds = anyOtherWay.Duration.Seconds;
             songLengthMinutes = anyOtherWay.Duration.Minutes;
 
+            allSongs[0] = anyOtherWay;
+
             //Load SongOver Textures
             dark = Content.Load<Texture2D>("DarkScreen");
             bigArial = Content.Load <SpriteFont>("BigArial");
+
         }
 
         /// <summary>
@@ -279,6 +326,10 @@ namespace SwordsDance
             {
                 case GameState.IntroScreen:
                     UpdateIntroScreen(gameTime);
+                    break;
+
+                case GameState.LevelSelect:
+                    UpdateLevelSelect(gameTime);
                     break;
 
                 case GameState.Gameplay:
@@ -324,16 +375,63 @@ namespace SwordsDance
             //Enter pressed
             if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
+                _gamestate = GameState.LevelSelect;
+                enterDown = true;
+            }
+        }
+
+        /// <summary>
+        /// Update fuction for the level select
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void UpdateLevelSelect(GameTime gameTime)
+        {
+            //To Intro Screen
+            if ((GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) && !escDown)
+                _gamestate = GameState.IntroScreen;
+            //Prevent holding escape
+            if ((GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Released && Keyboard.GetState().IsKeyUp(Keys.Escape)))
+                escDown = false;
+
+            //Enter Pressed
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Enter) && !enterDown && songID <= 0)
+            {
                 _gamestate = GameState.Gameplay;
                 startSound.Play();
 
-                if(_gamestate == GameState.Gameplay)
+                if (_gamestate == GameState.Gameplay)
                 {
                     TimeSpan startSong = new TimeSpan(0, 0, 0, 0, 0);
                     MediaPlayer.Play(anyOtherWay, startSong);
                 }
 
             }
+            //Prevent holding enter
+            if ((GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Released && Keyboard.GetState().IsKeyUp(Keys.Enter)))
+                enterDown = false;
+
+            //Move select bar down
+            if (Keyboard.GetState().IsKeyDown(Keys.Down) && !downDown && songID < 3){
+                barPosition.Y += 100;
+                songID++;
+                downDown = true;
+            }
+                   
+            //Prevent holding down
+            if (Keyboard.GetState().IsKeyUp(Keys.Down))
+                downDown = false;
+
+            //Move select bar up
+            if (Keyboard.GetState().IsKeyDown(Keys.Up) && !upDown && songID > 0)
+            {
+                barPosition.Y -= 100;
+                songID--;
+                upDown = true;
+            }
+
+            //Prevent holding up
+            if (Keyboard.GetState().IsKeyUp(Keys.Up))
+                upDown = false;
         }
 
         /// <summary>
@@ -513,6 +611,18 @@ namespace SwordsDance
                 MediaPlayer.Pause();
             }
 
+            //Update Background Color
+            
+            if (red == maxIntensity && blue < maxIntensity && green < maxIntensity) blue++;
+            else if (blue == maxIntensity && red > minIntensity && green < maxIntensity) red--;
+            else if (blue == maxIntensity && red < maxIntensity && green < maxIntensity) green++;
+            else if (green == maxIntensity && blue > minIntensity && red < maxIntensity) blue--;
+            else if (green == maxIntensity && blue < maxIntensity && red < maxIntensity) red++;
+            else if (red == maxIntensity && blue < maxIntensity && green > minIntensity) green--;
+
+            rainbow = new Color(red, green, blue);
+
+
 
         }
 
@@ -525,6 +635,7 @@ namespace SwordsDance
             //Prevent holding escape
             if ((GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Released && Keyboard.GetState().IsKeyUp(Keys.Escape)))
                 escDown = false;
+
             //Resume gameplay
             if ((GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) && !escDown)
             {
@@ -594,9 +705,8 @@ namespace SwordsDance
         protected override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
-
             //Set color of background
-            GraphicsDevice.Clear(Color.DarkMagenta);
+            GraphicsDevice.Clear(rainbow);
 
             //Draw textures that will always be on screen
             spriteBatch.Begin();
@@ -606,13 +716,8 @@ namespace SwordsDance
             spriteBatch.Draw(star, new Vector2(50, 170), new Rectangle(0, 0, 64, 64), Color.White);
             spriteBatch.Draw(star, new Vector2(350, 250), new Rectangle(0, 0, 64, 64), Color.White);
             spriteBatch.Draw(star, new Vector2(780, 100), new Rectangle(0, 0, 64, 64), Color.White);
-
-            //Draw Background
-                spriteBatch.Draw(bg, new Vector2(-50, 100), new Rectangle(0, 0, 700, 500), Color.Purple);
-                spriteBatch.Draw(bg, new Vector2(650, 100), new Rectangle(0, 0, 700, 500), Color.Purple);
-            
-
             spriteBatch.End();
+
 
             //Draw different things based on game state
             switch (_gamestate)
@@ -621,12 +726,16 @@ namespace SwordsDance
                     DrawIntro(gameTime);
                     break;
 
+                case GameState.LevelSelect:
+                    DrawLevelSelect(gameTime);
+                    break;
+
                 case GameState.Gameplay:
-                    DrawGameplay(gameTime);
+                    DrawGameplay(gameTime, false);
                     break;
 
                 case GameState.Paused:
-                    DrawGameplay(gameTime);
+                    DrawGameplay(gameTime, true);
                     DrawPaused(gameTime);
                     break;
 
@@ -642,6 +751,20 @@ namespace SwordsDance
         /// <param name="gameTime">The Game Time</param>
         private void DrawIntro(GameTime gameTime)
         {
+            spriteBatch.Begin(blendState: BlendState.AlphaBlend);
+            //Draw Background
+            spriteBatch.Draw(bg, new Vector2(-50, 100), new Rectangle(0, 0, 700, 500), rainbow);
+            spriteBatch.Draw(bg, new Vector2(650, 100), new Rectangle(0, 0, 700, 500), rainbow);
+
+            //Draw flares          
+            foreach (var flare in flares)
+            {
+                flare.Draw(gameTime, spriteBatch, false);
+            }
+
+            spriteBatch.End();
+
+
             introSpriteBatch.Begin();
 
             //Draw text
@@ -659,18 +782,78 @@ namespace SwordsDance
 
 
             introSpriteBatch.End();
+
+        }
+
+        /// <summary>
+        /// The draw function for level select
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void DrawLevelSelect(GameTime gameTime)
+        {
+
+            Matrix transform;
+            transform = Matrix.CreateScale(2);
+            spriteBatch.Begin(blendState: BlendState.AlphaBlend, transformMatrix: transform);
+            //Draw Background
+            spriteBatch.Draw(bg, new Vector2(-50, -100), new Rectangle(0, 0, 700, 500), rainbow);
+            spriteBatch.Draw(bg, new Vector2(650, -100), new Rectangle(0, 0, 700, 500), rainbow);
+
+            //Draw flares          
+            foreach (var flare in flares)
+            {
+                flare.Draw(gameTime, spriteBatch, false);
+            }
+
+            spriteBatch.End();
+
+
+            gameSpriteBatch.Begin();
+
+            //Darken Screen
+            gameSpriteBatch.Draw(dark, new Vector2(0, 0), null, Color.White);
+            gameSpriteBatch.Draw(dark, new Vector2(700, 0), null, Color.White);
+
+            gameSpriteBatch.End();
+
+            alphaSpriteBatch.Begin(blendState: BlendState.Additive);
+            alphaSpriteBatch.Draw(selectBar, barPosition, null, Color.White);
+
+            
+            //Display Score
+            alphaSpriteBatch.DrawString(arial, "Level Select:", new Vector2(350, 25), Color.White);
+            alphaSpriteBatch.DrawString(bigArial, "Any Other Way", new Vector2(225, 100), Color.White);
+            alphaSpriteBatch.DrawString(bigArial, "Coming Soon...", new Vector2(225, 200), Color.White);
+            alphaSpriteBatch.DrawString(bigArial, "Coming Soon...", new Vector2(225, 300), Color.White);
+            alphaSpriteBatch.DrawString(bigArial, "Coming Soon...", new Vector2(225, 400), Color.White);
+
+            alphaSpriteBatch.End();
+
         }
 
         /// <summary>
         /// The draw function for the gameplay loop
         /// </summary>
         /// <param name="gameTime">The Game Time</param>
-        private void DrawGameplay(GameTime gameTime)
+        private void DrawGameplay(GameTime gameTime, bool paused)
         {
+            spriteBatch.Begin(blendState: BlendState.AlphaBlend);
+            //Draw Background
+            spriteBatch.Draw(bg, new Vector2(-50, 100), new Rectangle(0, 0, 700, 500), rainbow);
+            spriteBatch.Draw(bg, new Vector2(650, 100), new Rectangle(0, 0, 700, 500), rainbow);
+
+            //Draw flares          
+            foreach (var flare in flares)
+            {
+                flare.Draw(gameTime, spriteBatch, paused);
+            }
+
+            spriteBatch.End();
+
             gameSpriteBatch.Begin();
             //Draw grid lines
-            gameSpriteBatch.Draw(gridLines, new Vector2(100, 80), new Rectangle(0, 0, 700, 80), Color.White);
-            gameSpriteBatch.Draw(gridLines, new Vector2(100, 310), new Rectangle(0, 0, 700, 80), Color.White);
+            gameSpriteBatch.Draw(gridLines, new Vector2(200, 80), new Rectangle(0, 0, 700, 80), Color.White);
+            gameSpriteBatch.Draw(gridLines, new Vector2(200, 310), new Rectangle(0, 0, 700, 80), Color.White);
 
             //Draw buttons
             fButton.Draw(gameTime, gameSpriteBatch);
