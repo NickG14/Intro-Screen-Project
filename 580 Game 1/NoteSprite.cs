@@ -48,11 +48,11 @@ namespace SwordsDance
         /// Loads the note texture
         /// </summary>
         /// <param name="content">The ContentManager to load with</param>
-        public void LoadContent(ContentManager content)
+        public int LoadContent(ContentManager content)
         {
             texture = content.Load<Texture2D>("NoteHit");
-
-            if (selectRow.Next(0, 2) == 0)
+            int random = selectRow.Next(0, 2);
+            if (random == 0)
             {
                 position = new Vector2(980, 72);
                 bounds = new BoundingRectangle(new Vector2(980, 72), 100, 50);
@@ -62,6 +62,7 @@ namespace SwordsDance
                 position = new Vector2(980, 302);
                 bounds = new BoundingRectangle(new Vector2(980, 302), 100, 50);
             }
+            return random;
         }
 
 
@@ -109,7 +110,7 @@ namespace SwordsDance
             }
         }
 
-        public void Reset(GameTime gameTime)
+        public int Reset(GameTime gameTime)
         {
             speed = new Vector2(-bpm / 16, 0);
 
@@ -117,7 +118,9 @@ namespace SwordsDance
 
             selectRow = new Random();
 
-            if(selectRow.Next(0,2) == 0)
+            int random = selectRow.Next(0, 2);
+
+            if(random == 0)
             {
                 position = new Vector2(980, 72);
                 bounds = new BoundingRectangle(new Vector2(980, 72), 100, 50);
@@ -132,6 +135,7 @@ namespace SwordsDance
 
             stopped = true;
 
-    }
+            return random;
+        }
     }
 }

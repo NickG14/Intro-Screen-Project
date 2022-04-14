@@ -81,6 +81,18 @@
 /processorParam:TextureFormat=Color
 /build:FButton.png
 
+#begin FButton3D.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:FButton3D.png
+
 #begin flare.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -117,6 +129,18 @@
 /processorParam:TextureFormat=Color
 /build:JButton.png
 
+#begin JButton3D.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:JButton3D.png
+
 #begin NoteHit.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -134,6 +158,18 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:NoteHitSound.wav
+
+#begin NoteTrack.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:NoteTrack.png
 
 #begin SelectBar.png
 /importer:TextureImporter

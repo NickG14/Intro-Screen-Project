@@ -57,7 +57,10 @@ namespace SwordsDance
         //Game textures
         private FButton fButton;
         private JButton jButton;
+        private FButton3D fButton3D;
+        private JButton3D jButton3D;
         private Texture2D flare;
+        private Texture2D track;
 
         //Dynamic Colors
         private int red;
@@ -70,6 +73,10 @@ namespace SwordsDance
         //The notes
         private NoteSprite note;
         private NoteSprite[] notes;
+
+        //The (new) 3D notes
+        private Note3D[] notes3D;
+        private bool is3D = true;
 
         //Gridlines
         private Texture2D gridLines;
@@ -157,6 +164,9 @@ namespace SwordsDance
             //Initialize game sprites
             fButton = new FButton();
             jButton = new JButton();
+            fButton3D = new FButton3D();
+            jButton3D = new JButton3D();
+
 
             //Initialize Colors
             red = 110;
@@ -280,19 +290,26 @@ namespace SwordsDance
             bg = Content.Load<Texture2D>("CityBGWhite");
             star = Content.Load<Texture2D>("Star");
 
+            //Load 3D notes
+            notes3D = new Note3D[notes.Length];
+            
             //Load Level Select Textures
             selectBar = Content.Load<Texture2D>("SelectBar");
 
             //Load Game Textures
             fButton.LoadContent(Content);
             jButton.LoadContent(Content);
+            fButton3D.LoadContent(Content);
+            jButton3D.LoadContent(Content);
             note.LoadContent(Content);
-            foreach(NoteSprite n in notes)
+            for(int i = 0; i < notes.Length; i++)
             {
-                n.LoadContent(Content);
+                int random = notes[i].LoadContent(Content);
+                notes3D[i] = new Note3D(this, random);
             }
             gridLines = Content.Load<Texture2D>("GridLines");
             flare = Content.Load<Texture2D>("flare");
+            track = Content.Load<Texture2D>("NoteTrack");
 
             //Load Sound Effects
             startSound = Content.Load<SoundEffect>("StartSound");
@@ -482,7 +499,9 @@ namespace SwordsDance
             if (songTime.Duration().CompareTo(nextNote.Duration()) > 0)
             {
                 notes[drawIterator].stopped = false;
+                notes3D[drawIterator].stopped = false;
                 noteIterator++;
+                
                
                 if (noteIterator == noteLayout.Length)
                 {
@@ -504,8 +523,11 @@ namespace SwordsDance
             if (Keyboard.GetState().IsKeyDown(Keys.F) || GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Pressed)
             {
                 fButton.Color = Color.Red;
-                foreach (NoteSprite n in notes)
+                fButton3D.Color = Color.Red;
+                for(int i = 0; i < notes.Length; i++)
                 {
+                    NoteSprite n = notes[i];
+                    Note3D n3D = notes3D[i];
                     if(!fKeyDown && !alreadyHit)
                     {
                         if (n.Bounds.CollidesWith(fButton.Bounds))
@@ -523,6 +545,7 @@ namespace SwordsDance
                             {
                                 n.Color = Color.Black;
                                 n.hit = true;
+                                n3D.hit = true;
                             }
                         }                  
                     }          
@@ -537,6 +560,7 @@ namespace SwordsDance
             else
             {
                 fButton.Color = Color.White;
+                fButton3D.Color = Color.White;
                 fKeyDown = false;
             }
 
@@ -544,8 +568,11 @@ namespace SwordsDance
             if (Keyboard.GetState().IsKeyDown(Keys.J) || GamePad.GetState(PlayerIndex.One).Buttons.LeftShoulder == ButtonState.Pressed)
             {
                 jButton.Color = Color.Blue;
-                foreach (NoteSprite n in notes)
+                jButton3D.Color = Color.Blue;
+                for (int i = 0; i < notes.Length; i++)
                 {
+                    NoteSprite n = notes[i];
+                    Note3D n3D = notes3D[i];
                     if (!jKeyDown && !alreadyHit)
                     {
                         if (n.Bounds.CollidesWith(jButton.Bounds))
@@ -563,6 +590,7 @@ namespace SwordsDance
                             {
                                 n.Color = Color.Black;
                                 n.hit = true;
+                                n3D.hit = true;
                             }
                         }
 
@@ -578,25 +606,43 @@ namespace SwordsDance
             else
             {
                 jButton.Color = Color.White;
+                jButton3D.Color = Color.White;
                 jKeyDown = false;
             }
 
 
-            //Reset note if it goes off screen
-            foreach (NoteSprite n in notes)
+            //Reset note if it goes off screen or gets hit
+            for(int i = 0; i < notes.Length; i++)
             {
+                NoteSprite n = notes[i];
+                Note3D n3D = notes3D[i];
                 if (n.Bounds.CollidesWith(reset.Bounds))
                 {
                     streak = 0;
-                    n.Reset(gameTime);
+                    int random = n.Reset(gameTime);
+                    n3D.Reset(random);
                 }
-                else if (n.animationFrame == 14)
+                else if (n.animationFrame == 14 && !is3D)
                 {
-                    n.Reset(gameTime);
+                    int random = n.Reset(gameTime);
+                    n3D.Reset(random);
+                }
+                else if (n.hit && is3D)
+                {
+                    int random = n.Reset(gameTime);
+                    n3D.Reset(random);
+                }
+                if (MediaPlayer.State == MediaState.Playing)
+                {
+                    n.Update(gameTime);
+                    n3D.Update(gameTime);
                 }
 
-                if(MediaPlayer.State == MediaState.Playing) n.Update(gameTime);
+            }
 
+            foreach(Note3D n in notes3D)
+            {
+                if (MediaPlayer.State == MediaState.Playing) n.Update(gameTime);
             }
 
             //Pause game
@@ -837,7 +883,7 @@ namespace SwordsDance
         /// <param name="gameTime">The Game Time</param>
         private void DrawGameplay(GameTime gameTime, bool paused)
         {
-            spriteBatch.Begin(blendState: BlendState.Additive);
+            spriteBatch.Begin();
             //Draw Background
             spriteBatch.Draw(bg, new Vector2(-50, 100), new Rectangle(0, 0, 700, 500), rainbow);
             spriteBatch.Draw(bg, new Vector2(650, 100), new Rectangle(0, 0, 700, 500), rainbow);
@@ -848,16 +894,28 @@ namespace SwordsDance
                 flare.Draw(gameTime, spriteBatch, paused);
             }
 
+            //Draw track
+            spriteBatch.Draw(track, new Vector2(60, 100), new Rectangle(0, 0, 700, 400), Color.White);
+
+            //Draw 3D buttons
+            fButton3D.Draw(gameTime, spriteBatch);
+            jButton3D.Draw(gameTime, spriteBatch);
+
             spriteBatch.End();
 
             gameSpriteBatch.Begin();
+            
             //Draw grid lines
-            gameSpriteBatch.Draw(gridLines, new Vector2(200, 80), new Rectangle(0, 0, 700, 80), Color.White);
-            gameSpriteBatch.Draw(gridLines, new Vector2(200, 310), new Rectangle(0, 0, 700, 80), Color.White);
+            //gameSpriteBatch.Draw(gridLines, new Vector2(200, 80), new Rectangle(0, 0, 700, 80), Color.White);
+            //gameSpriteBatch.Draw(gridLines, new Vector2(200, 310), new Rectangle(0, 0, 700, 80), Color.White);
+
+
 
             //Draw buttons
-            fButton.Draw(gameTime, gameSpriteBatch);
-            jButton.Draw(gameTime, gameSpriteBatch);
+            //fButton.Draw(gameTime, gameSpriteBatch);
+            //jButton.Draw(gameTime, gameSpriteBatch);
+            
+
 
 
             //testing values
@@ -879,9 +937,22 @@ namespace SwordsDance
             */
 
             //Draw notes
+            /*
             foreach (NoteSprite n in notes)
             {
                 n.Draw(gameTime, gameSpriteBatch);
+            }
+            */
+
+            //Draw 3D notes
+            for (int i = notes3D.Length - 1; i >= 0; i--)
+            {
+                Note3D n3D = notes3D[i];
+                if (!n3D.stopped)
+                {
+                    n3D.Draw();
+                }
+
             }
 
             //Draw Score
