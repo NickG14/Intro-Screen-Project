@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
+using SwordsDance.SongData;
 using System;
 
 namespace SwordsDance
@@ -83,7 +84,6 @@ namespace SwordsDance
 
         //Used for scoring
         private int score;
-        private int highscore = 0;
         private int streak;
         private int multiplier;
 
@@ -96,34 +96,19 @@ namespace SwordsDance
         private SoundEffect startSound;
         private SoundEffect noteHit;
 
-        //Song syncing
-        int songID = 0;
-        private Song anyOtherWay;
-        private Song[] allSongs = new Song[10];
-        private TimeSpan endSong = new TimeSpan(0, 2, 51);
-
-        private const float bpm = 132.1f;
-
+        //Song info
         private TimeSpan songTime;
-        private TimeSpan nextNote = new TimeSpan(0,0,0,0);
+        private TimeSpan nextNote = new TimeSpan(0, 0, 0, 0);
+        private ISongs[] allSongs = new ISongs[10];
+        private int songLengthMinutes;
+        private int songLengthSeconds;
 
-        //Different types of notes
-        private TimeSpan quarterNote = new TimeSpan((long)(1 / (bpm / 60.0) * 10000000));
-        private TimeSpan eighthNote = new TimeSpan((long)(1 / (bpm / 30.0) * 10000000));
-        private TimeSpan sixteenthNote = new TimeSpan((long)(1 / (bpm / 15.0) * 10000000));
-        private TimeSpan threeSixteenthNote = new TimeSpan((long)(1 / (bpm / 45.0) * 10000000));
-        private TimeSpan dottedQuarterNote = new TimeSpan((long)(1 / (bpm / 90.0) * 10000000));
-        private TimeSpan halfNote = new TimeSpan((long)(1 / (bpm / 120.0) * 10000000));
-        private TimeSpan wholeNote = new TimeSpan((long)(1 / (bpm / 240.0) * 10000000));
-        private TimeSpan quarterSix = new TimeSpan((long)(1 / (bpm / 75.0) * 10000000));
-        private TimeSpan eightAndAHalfBeats = new TimeSpan((long)(1 / (bpm / 510.0) * 10000000));
-        private TimeSpan fourAndAHalfBeats = new TimeSpan((long)(1 / (bpm / 270.0) * 10000000));
-        private TimeSpan twoAndAHalf = new TimeSpan((long)(1 / (bpm / 150.0) * 10000000));
-
-        //End of song
-        private TimeSpan endOfSong = new TimeSpan(0, 1, 0, 0);
-        private float songLengthSeconds = 0f;
-        private float songLengthMinutes = 0f;
+        //Songs
+        private int songID = 0;
+        private ISongs currSong;
+        private AnyOtherWay anyOtherWay;
+        private SpicyNoodles spicyNoodles;
+        private Showdown showDown;
 
         //Note layouts
         private TimeSpan[] noteLayout;
@@ -136,6 +121,9 @@ namespace SwordsDance
         //SongOver Textures
         private Texture2D dark;
         private SpriteFont bigArial;
+
+        //Tutorial stuff
+        private bool skipped;
         
         public MainWindow()
         {
@@ -147,7 +135,7 @@ namespace SwordsDance
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            skipped = false;
             //Initialize intro sprites
             swords = new SwordSprite[]{
             new SwordSprite() { Position = new Rectangle(200, 250, 100, 150), animationFrame = 0},
@@ -185,88 +173,25 @@ namespace SwordsDance
                                          new NoteSprite(), new NoteSprite(), new NoteSprite(), new NoteSprite(), new NoteSprite(),
                                          new NoteSprite(), new NoteSprite(), new NoteSprite(), new NoteSprite(), new NoteSprite()
                                         };
-            //Complete note layout
-            allNoteLayout = new TimeSpan[] { 
-                                            //Intro
-                                          wholeNote, eighthNote, dottedQuarterNote, dottedQuarterNote, quarterNote, dottedQuarterNote, dottedQuarterNote, quarterNote, wholeNote, 
-                                          quarterNote, eighthNote, eighthNote, quarterNote, dottedQuarterNote, eighthNote, quarterNote, eighthNote, quarterNote, quarterNote, 
-                                          quarterNote, quarterNote, quarterNote, quarterNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, sixteenthNote, 
-                                          threeSixteenthNote, eighthNote, quarterNote, quarterNote, quarterNote, dottedQuarterNote, threeSixteenthNote, quarterSix, threeSixteenthNote, quarterSix,
-                                          quarterNote, quarterNote, eighthNote, eighthNote, quarterNote, quarterNote, quarterNote, quarterNote, quarterNote,
-                                            //first verse
-                                          quarterNote, quarterNote, halfNote, eighthNote, eighthNote, eighthNote, eighthNote, dottedQuarterNote, eighthNote, eighthNote, 
-                                                quarterNote, quarterNote, quarterNote, quarterNote, eighthNote, eighthNote, eighthNote, eighthNote, sixteenthNote, sixteenthNote, 
-                                                quarterNote, halfNote, quarterNote, dottedQuarterNote, eighthNote, eighthNote, eighthNote, eighthNote,
-                                                dottedQuarterNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote, dottedQuarterNote, dottedQuarterNote, quarterNote, halfNote, 
-                                                quarterNote, quarterNote, quarterNote, quarterNote, quarterNote, eighthNote, eighthNote, quarterNote, eighthNote, 
-                                                eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote, eighthNote, eighthNote, 
-                                                eighthNote, eighthNote, halfNote, quarterNote, quarterNote, quarterNote, quarterNote, quarterNote, eighthNote,
-                                                dottedQuarterNote, quarterNote, quarterNote, quarterNote, quarterNote, quarterNote, quarterNote, quarterNote, eighthNote, eighthNote, quarterNote,
-                                            //drop
-                                               dottedQuarterNote, eighthNote, eighthNote, quarterNote, quarterNote, sixteenthNote, threeSixteenthNote, quarterNote, sixteenthNote,
-                                               threeSixteenthNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote,
-                                               eighthNote, eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, sixteenthNote, sixteenthNote,
 
-                                           //Repeat drop
-                                               dottedQuarterNote, eighthNote, eighthNote, quarterNote, quarterNote, sixteenthNote, threeSixteenthNote, eighthNote, sixteenthNote, eighthNote, quarterNote,
-                                            eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote,
-                                               eighthNote, eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, sixteenthNote, sixteenthNote,
-                                           //Second Verse
-                                               fourAndAHalfBeats, quarterNote, quarterNote, dottedQuarterNote, eighthNote, eighthNote, quarterNote, quarterNote, halfNote, eighthNote,
-                                                 quarterNote, dottedQuarterNote, eighthNote, dottedQuarterNote, eighthNote, eighthNote, eighthNote, sixteenthNote, sixteenthNote,
-                                                halfNote, quarterNote, dottedQuarterNote, eighthNote, eighthNote, quarterNote, quarterNote, quarterNote, eighthNote, eightAndAHalfBeats, 
-                                            //Bridge
-                                            dottedQuarterNote, sixteenthNote, sixteenthNote, eighthNote, quarterNote, eighthNote, quarterNote, threeSixteenthNote, eighthNote, threeSixteenthNote, 
-                                            dottedQuarterNote, eighthNote, threeSixteenthNote, eighthNote, threeSixteenthNote, quarterNote, eighthNote, dottedQuarterNote, sixteenthNote, sixteenthNote, 
-                                            eighthNote, quarterNote, eighthNote, quarterNote, eighthNote, sixteenthNote, sixteenthNote, halfNote, sixteenthNote, sixteenthNote, 
-                                            threeSixteenthNote, eighthNote, threeSixteenthNote, dottedQuarterNote, sixteenthNote, sixteenthNote, dottedQuarterNote, sixteenthNote, sixteenthNote, threeSixteenthNote, 
-                                            eighthNote, threeSixteenthNote, wholeNote,
-
-                                            //Buildup
-                                            quarterNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, eighthNote,
-                                             eighthNote, sixteenthNote, threeSixteenthNote, quarterNote, eighthNote, threeSixteenthNote, eighthNote, sixteenthNote, threeSixteenthNote, quarterNote, eighthNote,
-                                             eighthNote, threeSixteenthNote, eighthNote, sixteenthNote, threeSixteenthNote, quarterNote, eighthNote, eighthNote,
-                                             eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, eighthNote,
-                                             eighthNote, sixteenthNote, threeSixteenthNote, quarterNote, eighthNote, threeSixteenthNote, eighthNote, sixteenthNote, threeSixteenthNote, quarterNote, eighthNote,
-                                             eighthNote, threeSixteenthNote, eighthNote, sixteenthNote, threeSixteenthNote, 
-
-                                             //Buildup Part 2
-                                             halfNote, quarterNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote, eighthNote, quarterNote, eighthNote, eighthNote,
-                                                sixteenthNote, threeSixteenthNote, eighthNote, eighthNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote, eighthNote,
-                                                eighthNote, eighthNote, sixteenthNote, eighthNote, eighthNote, sixteenthNote,
-
-                                                threeSixteenthNote, quarterNote, quarterNote, quarterNote, quarterNote, sixteenthNote, eighthNote, quarterNote, sixteenthNote, eighthNote, eighthNote,
-                                                sixteenthNote, threeSixteenthNote, eighthNote, eighthNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote, eighthNote,
-                                                eighthNote, eighthNote, sixteenthNote, eighthNote, eighthNote, sixteenthNote,
-
-                                                //Second Drop
-                                               halfNote, eighthNote, eighthNote, quarterNote, quarterNote, sixteenthNote, threeSixteenthNote, quarterNote, sixteenthNote,
-                                               threeSixteenthNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote,
-                                               eighthNote, eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, sixteenthNote, sixteenthNote,
-
-                                               dottedQuarterNote, eighthNote, eighthNote, quarterNote, quarterNote, sixteenthNote, threeSixteenthNote, eighthNote, sixteenthNote, eighthNote, quarterNote,
-                                               eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote,
-                                               eighthNote, eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, sixteenthNote, sixteenthNote, quarterNote,
-
-                                               dottedQuarterNote, eighthNote, eighthNote, quarterNote, sixteenthNote, threeSixteenthNote, quarterNote, sixteenthNote,
-                                               threeSixteenthNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote,
-                                               eighthNote, eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, sixteenthNote, sixteenthNote,
-
-
-                                                dottedQuarterNote, eighthNote, eighthNote, quarterNote, quarterNote, sixteenthNote, threeSixteenthNote, eighthNote, sixteenthNote, eighthNote, quarterNote,
-                                                eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, eighthNote, quarterNote, quarterNote, eighthNote,
-                                               eighthNote, eighthNote, eighthNote, sixteenthNote, threeSixteenthNote, eighthNote, sixteenthNote, sixteenthNote, endOfSong};
-
-            //Load notes into array as times in the song
-            noteLayout = new TimeSpan[allNoteLayout.Length + 1];
-            int i = 1;
-            noteLayout[0] = new TimeSpan(0, 0, 0, 1, 900);
-            foreach (TimeSpan t in allNoteLayout)
+            if(allSongs[0] == null)
             {
-                noteLayout[i] = noteLayout[i - 1].Add(t);
-                i++;
+                anyOtherWay = new AnyOtherWay();
+                spicyNoodles = new SpicyNoodles();
+                showDown = new Showdown();
+                anyOtherWay.Initialize();
+                spicyNoodles.Initialize();
+                showDown.Initialize();
             }
 
+
+
+            allSongs[spicyNoodles.songID] = spicyNoodles;
+            allSongs[anyOtherWay.songID] = anyOtherWay;
+            allSongs[showDown.songID] = showDown;
+            
+
+            
             
             base.Initialize();
         }
@@ -306,6 +231,8 @@ namespace SwordsDance
             {
                 int random = notes[i].LoadContent(Content);
                 notes3D[i] = new Note3D(this, random);
+                notes[i].stopped = true;
+                notes3D[i].stopped = true;
             }
             gridLines = Content.Load<Texture2D>("GridLines");
             flare = Content.Load<Texture2D>("flare");
@@ -316,13 +243,19 @@ namespace SwordsDance
             noteHit = Content.Load<SoundEffect>("NoteHitSound");
 
             //Load Songs
-            anyOtherWay = Content.Load<Song>("Any-Other-Way-Boom-Kitty");
-            MediaPlayer.Volume = .5f;
-            nextNote = new TimeSpan(0, 0, 0, 2);
-            songLengthSeconds = anyOtherWay.Duration.Seconds;
-            songLengthMinutes = anyOtherWay.Duration.Minutes;
+            anyOtherWay.LoadContent(Content);
+            spicyNoodles.LoadContent(Content);
+            showDown.LoadContent(Content);
 
-            allSongs[0] = anyOtherWay;
+            if(currSong == null)
+            {
+                currSong = allSongs[0];
+            }
+            MediaPlayer.Volume = .5f;
+            nextNote = currSong.firstNote;
+            songLengthSeconds = currSong.seconds;
+            songLengthMinutes = currSong.minutes;
+
 
             //Load SongOver Textures
             dark = Content.Load<Texture2D>("DarkScreen");
@@ -382,6 +315,8 @@ namespace SwordsDance
         /// <param name="gameTime">the Game Time</param>
         private void UpdateIntroScreen(GameTime gameTime)
         {
+            MediaPlayer.Stop();
+
             //Exit game
             if ((GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) && !escDown)
                 Exit();
@@ -411,15 +346,27 @@ namespace SwordsDance
                 escDown = false;
 
             //Enter Pressed
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Enter) && !enterDown && songID <= 0)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Enter) && !enterDown && songID <= 2)
             {
                 _gamestate = GameState.Gameplay;
+                enterDown = true;
                 startSound.Play();
 
                 if (_gamestate == GameState.Gameplay)
                 {
+                    currSong = allSongs[songID];
+                    nextNote = currSong.firstNote;
+                    noteLayout = new TimeSpan[currSong.songNoteLayout.Length];
+                    int i = 0;
+                    foreach (TimeSpan t in currSong.songNoteLayout)
+                    {
+                        noteLayout[i] = noteLayout[i].Add(t);
+                        i++;
+                    }
+
+
                     TimeSpan startSong = new TimeSpan(0, 0, 0, 0, 0);
-                    MediaPlayer.Play(anyOtherWay, startSong);
+                    currSong.Play();
                 }
 
             }
@@ -460,16 +407,32 @@ namespace SwordsDance
             alreadyHit = false;
             note.Update(gameTime);
 
+            //Skip tutorial
+            if(currSong.songID == 0 && (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Enter)) && !enterDown && !skipped)
+            {
+                skipped = true;
+                MediaPlayer.Stop();
+                spicyNoodles.Play(new TimeSpan(0,0,0,29,0));
+            }
+
+            //prevent skip from being pressed after song start
+            if(nextNote != noteLayout[0])
+            {
+                skipped = true;
+            }
+
+            if ((GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Released && Keyboard.GetState().IsKeyUp(Keys.Enter)))
+                enterDown = false;
+
             //Make sure MediaPlayer is playing
-            if(MediaPlayer.State == MediaState.Stopped) MediaPlayer.Play(anyOtherWay, songTime);
-            else if (MediaPlayer.State == MediaState.Paused) MediaPlayer.Resume();
+            //if(MediaPlayer.State == MediaState.Stopped) MediaPlayer.Play(anyOtherWay, songTime);
+            if (MediaPlayer.State == MediaState.Paused) MediaPlayer.Resume();
 
             //Get song position and check for end of song
             songTime = MediaPlayer.PlayPosition;
-            if(songTime.Duration().CompareTo(endSong) > 0)
-            {
+            if (songTime.Duration().Seconds >= currSong.seconds && songTime.Duration().Minutes >= currSong.minutes) { 
                 _gamestate = GameState.SongOver;
-                MediaPlayer.Stop();
+                //MediaPlayer.Stop();
                 songTime = new TimeSpan(0, 0, 0);
             }
 
@@ -513,11 +476,10 @@ namespace SwordsDance
                 {
                     drawIterator = 0;
                 }
-                nextNote = noteLayout[noteIterator];
+                nextNote += noteLayout[noteIterator];
             }
 
-            if (songTime.Duration().Seconds >= songLengthSeconds && songTime.Duration().Minutes >= songLengthMinutes )
-                _gamestate = GameState.SongOver;
+
 
             //f button pressed
             if (Keyboard.GetState().IsKeyDown(Keys.F) || GamePad.GetState(PlayerIndex.One).Buttons.RightShoulder == ButtonState.Pressed)
@@ -532,7 +494,7 @@ namespace SwordsDance
                     {
                         if (n.Bounds.CollidesWith(fButton.Bounds))
                         {
-                            noteHit.Play();
+                            //noteHit.Play();
                             score = score + (multiplier * 250);
                             streak++;
                             alreadyHit = true;
@@ -577,7 +539,7 @@ namespace SwordsDance
                     {
                         if (n.Bounds.CollidesWith(jButton.Bounds))
                         {
-                            noteHit.Play();
+                            //noteHit.Play();
                             score = score + (multiplier * 250);
                             streak++;
                             alreadyHit = true;
@@ -696,7 +658,7 @@ namespace SwordsDance
                 LoadContent();
                 Reload();
                 TimeSpan startSong = new TimeSpan(0, 0, 0, 0, 0);
-                MediaPlayer.Play(anyOtherWay, startSong);
+                currSong.Play();
             }
 
             //Exit to Title Screen
@@ -717,8 +679,8 @@ namespace SwordsDance
         private void UpdateEndScreen(GameTime gameTime)
         {
             //Set new highscore if applicable
-            if (score > highscore)
-                highscore = score;
+            if (score > currSong.highScore)
+                currSong.highScore = score;
 
             //Exit to Title Screen
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -739,7 +701,7 @@ namespace SwordsDance
                 Reload();
                 //TimeSpan startSong = new TimeSpan(0, 0, 2, 47, 600);
                 TimeSpan startSong = new TimeSpan(0, 0, 0, 0, 0);
-                MediaPlayer.Play(anyOtherWay, startSong);
+                currSong.Play();
             }
                 
         }
@@ -868,9 +830,9 @@ namespace SwordsDance
             
             //Display Score
             alphaSpriteBatch.DrawString(arial, "Level Select:", new Vector2(350, 25), Color.White);
-            alphaSpriteBatch.DrawString(bigArial, "Any Other Way", new Vector2(225, 100), Color.White);
-            alphaSpriteBatch.DrawString(bigArial, "Coming Soon...", new Vector2(225, 200), Color.White);
-            alphaSpriteBatch.DrawString(bigArial, "Coming Soon...", new Vector2(225, 300), Color.White);
+            alphaSpriteBatch.DrawString(bigArial, "Tutorial", new Vector2(225, 100), Color.White);
+            alphaSpriteBatch.DrawString(bigArial, "Showdown", new Vector2(225, 200), Color.White);
+            alphaSpriteBatch.DrawString(bigArial, "Any Other Way", new Vector2(225, 300), Color.White);
             alphaSpriteBatch.DrawString(bigArial, "Coming Soon...", new Vector2(225, 400), Color.White);
 
             alphaSpriteBatch.End();
@@ -904,7 +866,7 @@ namespace SwordsDance
             spriteBatch.End();
 
             gameSpriteBatch.Begin();
-            
+
             //Draw grid lines
             //gameSpriteBatch.Draw(gridLines, new Vector2(200, 80), new Rectangle(0, 0, 700, 80), Color.White);
             //gameSpriteBatch.Draw(gridLines, new Vector2(200, 310), new Rectangle(0, 0, 700, 80), Color.White);
@@ -914,13 +876,18 @@ namespace SwordsDance
             //Draw buttons
             //fButton.Draw(gameTime, gameSpriteBatch);
             //jButton.Draw(gameTime, gameSpriteBatch);
-            
+
 
 
 
             //testing values
             /*
+            gameSpriteBatch.DrawString(arial, songTime.Duration().Minutes.ToString(), new Vector2(295, 350), Color.White);
             gameSpriteBatch.DrawString(arial, songTime.Duration().Seconds.ToString(), new Vector2(295, 450), Color.White);
+
+            gameSpriteBatch.DrawString(arial, currSong.minutes.ToString(), new Vector2(395, 350), Color.White);
+            gameSpriteBatch.DrawString(arial, currSong.seconds.ToString(), new Vector2(395, 450), Color.White);
+            
             gameSpriteBatch.DrawString(arial, songLengthSeconds.ToString(), new Vector2(295, 400), Color.White);
             gameSpriteBatch.DrawString(arial, _gamestate.ToString(), new Vector2(295, 350), Color.White);
             
@@ -963,6 +930,15 @@ namespace SwordsDance
             gameSpriteBatch.DrawString(arial, "Escape/B to Pause", new Vector2(650, 10), Color.White);
 
             gameSpriteBatch.End();
+
+            //Draw tutorial if correct level
+            if(currSong.songID == 0 && nextNote == noteLayout[0] && !paused)
+            {
+                spriteBatch.Begin();
+                spicyNoodles.Draw(gameTime, spriteBatch, dark, arial);
+                spriteBatch.End();
+            }
+
         }
 
         /// <summary>
@@ -980,7 +956,7 @@ namespace SwordsDance
             //Display Score
             songOverSpriteBatch.DrawString(bigArial, "Score:", new Vector2(300, 100), Color.White);
             songOverSpriteBatch.DrawString(bigArial, score.ToString(), new Vector2(300, 170), Color.White);
-            songOverSpriteBatch.DrawString(arial, "High Score: " + highscore.ToString(), new Vector2(300, 40), Color.White);
+            songOverSpriteBatch.DrawString(arial, "High Score: " + currSong.highScore.ToString(), new Vector2(300, 40), Color.White);
 
             //Display options
             songOverSpriteBatch.DrawString(arial, "Press E/Left Trigger to exit to menu", new Vector2(300, 250), Color.White);
@@ -1005,7 +981,7 @@ namespace SwordsDance
             //Display Score
             songOverSpriteBatch.DrawString(bigArial, "Score:", new Vector2(300, 100), Color.White);
             songOverSpriteBatch.DrawString(bigArial, score.ToString(), new Vector2(300, 170), Color.White);
-            songOverSpriteBatch.DrawString(arial, "High Score: " + highscore.ToString(), new Vector2(300, 40), Color.White);
+            songOverSpriteBatch.DrawString(arial, "High Score: " + currSong.highScore.ToString(), new Vector2(300, 40), Color.White);
 
             //Display Options
             songOverSpriteBatch.DrawString(arial, "Press Start/R to retry", new Vector2(300, 250), Color.White);

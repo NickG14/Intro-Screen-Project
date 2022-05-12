@@ -170,7 +170,7 @@ namespace SwordsDance
         {
             if(!hit && !stopped)
             {
-                updatePosition += 0.41f;
+                updatePosition += 0.41f;                         
                 // Look at the cube from farther away while spinning around it
 
                 Matrix movement = Matrix.CreateTranslation(new Vector3(lane, -10, 0));

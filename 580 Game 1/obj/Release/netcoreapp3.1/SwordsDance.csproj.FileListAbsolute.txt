@@ -104,3 +104,6 @@ C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Co
 C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\flare.xnb
 C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\SelectBar.xnb
 C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\Test.xnb
+C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\FButton3D.xnb
+C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\JButton3D.xnb
+C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\NoteTrack.xnb

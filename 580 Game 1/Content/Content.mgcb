@@ -183,6 +183,18 @@
 /processorParam:TextureFormat=Color
 /build:SelectBar.png
 
+#begin Showdown-Creo.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Showdown-Creo.mp3
+
+#begin Spicy-Noodles-Boom-Kitty.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Spicy-Noodles-Boom-Kitty.mp3
+
 #begin Star.png
 /importer:TextureImporter
 /processor:TextureProcessor

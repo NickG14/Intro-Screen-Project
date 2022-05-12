@@ -20,6 +20,8 @@
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/NoteHitSound.wav</File>
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/NoteTrack.png</File>
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/SelectBar.png</File>
+    <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/Showdown-Creo.mp3</File>
+    <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/Spicy-Noodles-Boom-Kitty.mp3</File>
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/Star.png</File>
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/StartSound.wav</File>
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/SwordSheet.png</File>
@@ -27,6 +29,8 @@
     <File>C:/Users/nickg/source/repos/Swords-Dance/580 Game 1/Content/Title.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
