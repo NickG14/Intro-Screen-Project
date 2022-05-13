@@ -107,3 +107,9 @@ C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Co
 C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\FButton3D.xnb
 C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\JButton3D.xnb
 C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\NoteTrack.xnb
+C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\Boom Kitty - Spicy Noodles.wma
+C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\Boom Kitty - Spicy Noodles.xnb
+C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\Showdown-Creo.wma
+C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\Showdown-Creo.xnb
+C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\Spicy-Noodles-Boom-Kitty.wma
+C:\Users\nickg\source\repos\Swords-Dance\580 Game 1\bin\Release\netcoreapp3.1\Content\Spicy-Noodles-Boom-Kitty.xnb
