@@ -4,4 +4,6 @@ All textures made by me (swords, title, background, stars, notes, buttons) using
 
 All sound effects made by me(start game sound, note hit sound) using bfxr
 
-Song: Any Other Way by Boom Kitty Feat. Ivy Marie (See LOOSELY_ENFORCED.txt)
+Songs: Any Other Way by Boom Kitty Feat. Ivy Marie (See Boom Kitty Copyright.txt)
+           Spicy Noodles by Boom Kitty  (See Boom Kitty Copyright.txt)
+           Showdown by Creo (See Creo Copyright.txt)
