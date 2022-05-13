@@ -31,5 +31,7 @@ namespace SwordsDance.SongData
         int minutes { get; }
 
         int seconds { get; }
+
+        bool completed { get; set; }
     }
 }

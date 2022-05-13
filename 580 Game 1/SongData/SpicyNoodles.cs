@@ -102,6 +102,20 @@ namespace SwordsDance.SongData
             }
         }
 
+        private bool _complete = false;
+        public bool completed
+        {
+            get
+            {
+                return _complete;
+            }
+
+            set
+            {
+                _complete = value;
+            }
+        }
+
         Song song;
 
         public void Play()
@@ -155,7 +169,7 @@ namespace SwordsDance.SongData
             spriteBatch.DrawString(sf, "Press the F and J keys when a note passes over their respective zones.", new Vector2(100,100), Color.White);
             spriteBatch.DrawString(sf, "The more notes you hit in a row, the more points you get for each note!", new Vector2(100, 200), Color.White);
             spriteBatch.DrawString(sf, "Missing a note or hitting F or J when no note is over their zone will result in the streak being reset", new Vector2(100, 300), Color.White);
-            spriteBatch.DrawString(sf, "Getting high enough scores will unlock the next level!", new Vector2(100, 400), Color.White);
+            spriteBatch.DrawString(sf, "Go for a high score!", new Vector2(100, 400), Color.White);
             spriteBatch.DrawString(sf, "Press Enter to skip", new Vector2(652, 35), Color.White);
         }
 

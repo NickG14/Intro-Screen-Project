@@ -340,34 +340,48 @@ namespace SwordsDance
         {
             //To Intro Screen
             if ((GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) && !escDown)
+            {
                 _gamestate = GameState.IntroScreen;
+                escDown = true;
+            }
+
             //Prevent holding escape
             if ((GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Released && Keyboard.GetState().IsKeyUp(Keys.Escape)))
                 escDown = false;
 
             //Enter Pressed
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Enter) && !enterDown && songID <= 2)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Enter) && !enterDown && ((songID <= 2 && spicyNoodles.completed) || (songID == 0)))
             {
-                _gamestate = GameState.Gameplay;
-                enterDown = true;
-                startSound.Play();
+                bool valid = true;
 
-                if (_gamestate == GameState.Gameplay)
+                if(songID == 2 && showDown.highScore < 50000)
                 {
-                    currSong = allSongs[songID];
-                    nextNote = currSong.firstNote;
-                    noteLayout = new TimeSpan[currSong.songNoteLayout.Length];
-                    int i = 0;
-                    foreach (TimeSpan t in currSong.songNoteLayout)
-                    {
-                        noteLayout[i] = noteLayout[i].Add(t);
-                        i++;
-                    }
-
-
-                    TimeSpan startSong = new TimeSpan(0, 0, 0, 0, 0);
-                    currSong.Play();
+                    valid = false;
                 }
+                if (valid)
+                {
+                    _gamestate = GameState.Gameplay;
+                    enterDown = true;
+                    startSound.Play();
+
+                    if (_gamestate == GameState.Gameplay)
+                    {
+                        currSong = allSongs[songID];
+                        nextNote = currSong.firstNote;
+                        noteLayout = new TimeSpan[currSong.songNoteLayout.Length];
+                        int i = 0;
+                        foreach (TimeSpan t in currSong.songNoteLayout)
+                        {
+                            noteLayout[i] = noteLayout[i].Add(t);
+                            i++;
+                        }
+
+
+                        TimeSpan startSong = new TimeSpan(0, 0, 0, 0, 0);
+                        currSong.Play();
+                    }
+                }
+
 
             }
             //Prevent holding enter
@@ -375,7 +389,7 @@ namespace SwordsDance
                 enterDown = false;
 
             //Move select bar down
-            if (Keyboard.GetState().IsKeyDown(Keys.Down) && !downDown && songID < 3){
+            if (Keyboard.GetState().IsKeyDown(Keys.Down) && !downDown && songID < 2){
                 barPosition.Y += 100;
                 songID++;
                 downDown = true;
@@ -682,11 +696,13 @@ namespace SwordsDance
             if (score > currSong.highScore)
                 currSong.highScore = score;
 
+            allSongs[songID].completed = true;
             //Exit to Title Screen
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 escDown = true;
-                _gamestate = GameState.IntroScreen;
+                MediaPlayer.Stop();
+                _gamestate = GameState.LevelSelect;
                 Initialize();
                 LoadContent();
                 Reload();
@@ -827,13 +843,33 @@ namespace SwordsDance
             alphaSpriteBatch.Begin(blendState: BlendState.Additive);
             alphaSpriteBatch.Draw(selectBar, barPosition, null, Color.White);
 
-            
-            //Display Score
+
+            //Display instructions
+            alphaSpriteBatch.DrawString(arial, "Navigate with the arrow keys", new Vector2(10, 10), Color.White);
+            alphaSpriteBatch.DrawString(arial, "Press Enter to select", new Vector2(10, 30), Color.White);
+            alphaSpriteBatch.DrawString(arial, "Press Esc/B to exit to title screen", new Vector2(550, 10), Color.White);
             alphaSpriteBatch.DrawString(arial, "Level Select:", new Vector2(350, 25), Color.White);
-            alphaSpriteBatch.DrawString(bigArial, "Tutorial", new Vector2(225, 100), Color.White);
-            alphaSpriteBatch.DrawString(bigArial, "Showdown", new Vector2(225, 200), Color.White);
-            alphaSpriteBatch.DrawString(bigArial, "Any Other Way", new Vector2(225, 300), Color.White);
-            alphaSpriteBatch.DrawString(bigArial, "Coming Soon...", new Vector2(225, 400), Color.White);
+            alphaSpriteBatch.DrawString(bigArial, "Tutorial", new Vector2(300, 100), Color.White);
+            if (spicyNoodles.completed)
+            {
+                alphaSpriteBatch.DrawString(bigArial, "Showdown", new Vector2(270, 200), Color.White);
+                if (showDown.highScore > 50000)
+                {
+                    alphaSpriteBatch.DrawString(bigArial, "Any Other Way", new Vector2(220, 300), Color.White);
+                }
+                else
+                {
+                    alphaSpriteBatch.DrawString(arial, "Score 50000 on Showdown to unlock this level", new Vector2(235, 325), Color.White);
+                }
+            }
+            else
+            {
+                alphaSpriteBatch.DrawString(arial, "Complete the tutorial to unlock this level", new Vector2(250, 225), Color.White);
+                alphaSpriteBatch.DrawString(arial, "Score 50000 on Showdown to unlock this level", new Vector2(235, 325), Color.White);
+            }
+
+            
+
 
             alphaSpriteBatch.End();
 

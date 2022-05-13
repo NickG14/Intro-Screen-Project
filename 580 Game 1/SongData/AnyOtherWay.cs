@@ -96,6 +96,20 @@ namespace SwordsDance.SongData
             }
         }
 
+        private bool _complete = false;
+        public bool completed
+        {
+            get
+            {
+                return _complete;
+            }
+
+            set
+            {
+                _complete = value;
+            }
+        }
+
         Song song;
 
         public void Play()
